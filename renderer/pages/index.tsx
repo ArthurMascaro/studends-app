@@ -1,5 +1,6 @@
 import Content from "../components/Content";
 import Header from "../components/Header";
+import InputFindUser from "../components/InputFindUser";
 import Layout from "../components/Layout";
 
 const Index = () => {
@@ -19,6 +20,7 @@ const Index = () => {
 				</Header>
 				<Content>
 					<h1>Index page</h1>
+					<InputFindUser/>
 				</Content>
 			</Layout>
 		</div>
