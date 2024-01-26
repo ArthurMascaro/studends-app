@@ -99,7 +99,7 @@ const StudentModal = () => {
                                 {
                                     years.map((year) => {
                                         return (
-                                            <option value={year.value}>{year.text}</option>
+                                            <option key={year.value} value={year.value}>{year.text}</option>
                                         )
                                     })
                                 }
