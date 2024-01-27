@@ -10,7 +10,87 @@ datasource db {
   url      = "file:./database.db"
 }
 
-model Users {
-  id      String @id @default(uuid())
+model User {
+  cpf String @id()
   name    String
+  motherName String
+  phones Phone[]
+  bornDate DateTime
+  grade String
+  observation String?
+  owing Int?
+  lectures Lecture[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("users")
 }
+
+model Phone {
+  id String @id @default(uuid())
+  number String
+  user_cpf String
+  user User @relation(fields: [user_cpf], references: [cpf])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("phones")
+}
+
+model Lesson {
+  id String @id @default(uuid())
+  date DateTime
+  startAt DateTime
+  endAt DateTime
+  value Float
+  lectures Lecture[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("lessons")
+}
+
+model Lecture {
+  id String @id @default(uuid())
+  user_cpf String
+  lesson_id String
+  payed Boolean @default(false)
+  presence Boolean @default(false)
+  day_id String
+
+  user User @relation(fields: [user_cpf], references: [cpf])
+  lesson Lesson @relation(fields: [lesson_id], references: [id])
+  day Day @relation(fields: [day_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("lectures")
+}
+
+model Day {
+  id String @id @default(uuid())
+  name String 
+  date DateTime
+  lectures Lecture[]
+  week_id String
+
+  Week Week @relation(fields: [week_id], references: [id])
+
+  @@map("days")
+}
+
+model Week {
+  id String @id @default(uuid())
+  startAt DateTime
+  endAt DateTime
+  days Day[]
+
+  @@map("weeks")
+}
+
+
+
