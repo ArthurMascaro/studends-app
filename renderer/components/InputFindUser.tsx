@@ -31,7 +31,7 @@ const InputFindUser = () => {
                     {
                         queries.map((query) => {
                             return (
-                                <option className="font-bold" value={query}>{QueryTypeEnum[query]}</option>
+                                <option key={query} className="font-bold" value={query}>{QueryTypeEnum[query]}</option>
                             )
                         })
                     }
