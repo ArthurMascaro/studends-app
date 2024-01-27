@@ -12,23 +12,23 @@ interface IStudent {
 interface ILesson {
     id: string;
     date: Date;
-    startTime: Date;
-    endTime: Date;
+    startAt: Date;
+    endAt: Date;
     value: number;
 }
 
-interface ILessonStudent {
+interface ILecture {
     id: string;
     student: IStudent;
     lesson: ILesson;
     payed: boolean;
-    presente: boolean;
+    presence: boolean;
 }
 
 interface IDay {
     name: string;
     date: Date;
-    lessons: ILessonStudent[];
+    lessons: ILecture[];
 }
 
 interface IWeek {
