@@ -7,6 +7,9 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 
+//Controllers
+import UserDAO from "../api/repositories/UserDAO";
+
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
     await prepareNext("./renderer");
@@ -38,3 +41,7 @@ app.on("ready", async () => {
 app.on("window-all-closed", app.quit);
 
 ipcMain.on("hi", () => console.log("hi"));
+
+//user events 
+const userDAO = new UserDAO();
+ipcMain.on("create-user", userDAO.create);

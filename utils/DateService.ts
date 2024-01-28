@@ -1,6 +1,11 @@
 import { Dayjs } from "dayjs";
 import dayjs from "./dayjs.config";
 
+interface IWeekDay {
+    day: string,
+    date: Dayjs
+}
+
 class DataService {
 
     static days = "dom-seg-ter-qua-qui-sex-sab".split("-");
@@ -13,7 +18,7 @@ class DataService {
         //default today
         const sunday = day.startOf("week");
 
-        let week = [];
+        let week: IWeekDay[] = [];
 
         for (let i = 0; i <= 6; i++) {
             let date = dayjs(sunday).add(i, "days");
