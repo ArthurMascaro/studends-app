@@ -7,8 +7,6 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 
-import { findAllUsers, createUser } from "../api/services/UserController";
-
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
     await prepareNext("./renderer");
@@ -38,9 +36,5 @@ app.on("ready", async () => {
 
 // Quit the app once all windows are closed
 app.on("window-all-closed", app.quit);
-
-ipcMain.on("get-users", findAllUsers);
-
-ipcMain.on("create-user", createUser);
 
 ipcMain.on("hi", () => console.log("hi"));
