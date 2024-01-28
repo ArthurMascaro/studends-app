@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ICreatePhone, ICreateStudent, IPhone, IStudent } from "../domain/interfaces";
 
-class DAO {
+class UserDAO {
 
     prisma: PrismaClient;
 
@@ -12,9 +12,9 @@ class DAO {
     async create(event, data: ICreateStudent) {
       try {
         const result = await this.prisma.user.create({ data });
-        event.reply("create-success", result);
+        event.reply("create-user-success", result);
       } catch (error) {
-        event.reply("create-error", error.message);
+        event.reply("create-user-error", error.message);
       }
     }
   
@@ -23,18 +23,18 @@ class DAO {
         const result: IStudent | null = await this.prisma.user.findUnique({
           where: { cpf },
         });
-        event.reply("find-by-id-success", result);
+        event.reply("find-user-by-id-success", result);
       } catch (error) {
-        event.reply("find-by-id-error", error.message);
+        event.reply("find-user-by-id-error", error.message);
       }
     }
   
     async findAll(event) {
       try {
         const result: IStudent[] = await this.prisma.user.findMany();
-        event.reply("find-all-success", result);
+        event.reply("find-all-users-success", result);
       } catch (error) {
-        event.reply("find-all-error", error.message);
+        event.reply("find-all-users-error", error.message);
       }
     }
   
@@ -44,9 +44,9 @@ class DAO {
           where: { cpf },
           data: newData,
         });
-        event.reply("update-success", result);
+        event.reply("update-user-success", result);
       } catch (error) {
-        event.reply("update-error", error.message);
+        event.reply("update-user-error", error.message);
       }
     }
   
@@ -55,18 +55,18 @@ class DAO {
         const result: IStudent = await this.prisma.user.delete({
           where: { cpf },
         });
-        event.reply("delete-success", result);
+        event.reply("delete-user-success", result);
       } catch (error) {
-        event.reply("delete-error", error.message);
+        event.reply("delete-user-error", error.message);
       }
     }
 
     async createPhone(event, data: ICreatePhone){
         try {
             const result: IPhone = await this.prisma.phone.create({ data });
-            event.reply("create-success", result);
+            event.reply("create-phone-success", result);
           } catch (error) {
-            event.reply("create-error", error.message);
+            event.reply("create-phone-error", error.message);
           }
     }
 
@@ -75,9 +75,9 @@ class DAO {
             const result: IPhone[] = await this.prisma.phone.findMany({
                 where: {user_cpf}
             });
-            event.reply("find-all-success", result);
+            event.reply("find-all-phones-success", result);
           } catch (error) {
-            event.reply("find-all-error", error.message);
+            event.reply("find-all-phones-error", error.message);
           }
     }
 
@@ -86,9 +86,9 @@ class DAO {
             const result: IPhone = await this.prisma.phone.delete({
               where: { id },
             });
-            event.reply("delete-success", result);
+            event.reply("delete-phone-success", result);
           } catch (error) {
-            event.reply("delete-error", error.message);
+            event.reply("delete-phone-error", error.message);
           }
     }
 
@@ -98,15 +98,11 @@ class DAO {
             where: { id },
             data: newData,
           });
-          event.reply("update-success", result);
+          event.reply("update-phone-success", result);
         } catch (error) {
-          event.reply("update-error", error.message);
+          event.reply("update-phone-error", error.message);
         }
-      }
-  }
+    }
+}
 
-  
-
-  
-  
-  module.exports = DAO;
+export default UserDAO;
