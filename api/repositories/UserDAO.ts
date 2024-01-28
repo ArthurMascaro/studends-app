@@ -10,11 +10,14 @@ class UserDAO {
     }
   
     async create(event: any, data: ICreateStudent) {
+      console.log("avsvasvzvxz")
       try {
         const result = await this.prisma.user.create({ data });
-        event.reply("create-user-success", result);
+        console.log("alo")
+        return event.reply("create-user-success", result);
       } catch (error: any) {
-        event.reply("create-user-error", error.message);
+        console.log(error)
+        return event.reply("create-user-error", error.message);
       }
     }
   

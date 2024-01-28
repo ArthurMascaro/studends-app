@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import Modal from "./Modal";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const ModalTriggerButton = () => {
     return (
@@ -46,6 +47,8 @@ const StudentModal = () => {
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
 
+    const [student, setStudent] = useState(null);
+
     const onSubmit = (data: FormData) => {
         reset();
 
@@ -61,6 +64,7 @@ const StudentModal = () => {
         }
 
         console.log(payload);
+        window.main.send("create-user", payload);
     }
 
     let years = [];

@@ -44,5 +44,6 @@ ipcMain.on("hi", () => console.log("hi"));
 
 //user events 
 const userDAO = new UserDAO();
+
 ipcMain.on("create-user", userDAO.create);
 ipcMain.on("update-user", userDAO.update);
