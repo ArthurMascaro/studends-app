@@ -1,5 +1,3 @@
-import { Module } from "module";
-
 export interface ICreateStudent {
     cpf: string;
     name: string;

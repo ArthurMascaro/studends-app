@@ -27,7 +27,7 @@ const InputFindUser = () => {
     return (
         <div className="flex">
             <div className="px-5 flex flex-row">
-                <select value={query} onChange={(event) => setQuery(event.target.value)} className="bg-primaryBlue h-12 rounded-tl-md rounded-bl-md text-white font-bold text-center">
+                <select value={query} onChange={(event) => setQuery(event.target.value)} className="bg-darkBlue h-12 rounded-tl-md rounded-bl-md text-white font-bold text-center">
                     {
                         queries.map((query) => {
                             return (
@@ -40,10 +40,10 @@ const InputFindUser = () => {
                     placeholder={`Buscar aluno(s) ${QueryTypeEnum[query]}`} 
                     readOnly={query === "owing" ? true : false} 
                     type={InputTypeEnum[query]} 
-                    className="border-2 border-primaryBlue h-12 p-3 w-96 rounded-tr-md rounded-br-md text-slate-700 placeholder-slate-700 font-bold shadow-xl"
+                    className="border-2 border-darkBlue h-12 p-3 w-96 rounded-tr-md rounded-br-md text-slate-700 placeholder-slate-700 font-bold shadow-xl"
                 />
             </div>
-            <button className="bg-primaryBlue rounded-md py-2 px-4 shadow-xl" onClick={handleSearchUser}>
+            <button className="bg-darkBlue rounded-md py-2 px-4 shadow-xl" onClick={handleSearchUser}>
                 <h1 className="text-white text-xl font-bold">Buscar</h1>
             </button>
         </div>

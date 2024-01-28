@@ -548,6 +548,10 @@ video {
   position: fixed;
 }
 
+.relative {
+  position: relative;
+}
+
 .inset-0 {
   inset: 0px;
 }
@@ -556,9 +560,28 @@ video {
   margin: 1.25rem;
 }
 
+.m-3 {
+  margin: 0.75rem;
+}
+
+.mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
+}
+
+.mx-5 {
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+
+.mx-6 {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 .my-1 {
@@ -576,9 +599,29 @@ video {
   margin-bottom: 0.5rem;
 }
 
+.my-3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+
+.mx-8 {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.mx-10 {
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
+.my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .mb-5 {
@@ -622,6 +665,26 @@ video {
   height: 100vh;
 }
 
+.h-full {
+  height: 100%;
+}
+
+.h-1\/2 {
+  height: 50%;
+}
+
+.h-96 {
+  height: 24rem;
+}
+
+.h-2\/5 {
+  height: 40%;
+}
+
+.max-h-3\/5 {
+  max-height: 60%;
+}
+
 .w-10\/12 {
   width: 83.333333%;
 }
@@ -654,6 +717,11 @@ video {
   width: 24rem;
 }
 
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 .w-full {
   width: 100%;
 }
@@ -668,10 +736,6 @@ video {
 
 .flex-col {
   flex-direction: column;
-}
-
-.items-end {
-  align-items: flex-end;
 }
 
 .items-center {
@@ -694,12 +758,24 @@ video {
   gap: 1rem;
 }
 
-.gap-6 {
-  gap: 1.5rem;
-}
-
 .gap-8 {
   gap: 2rem;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
 }
 
 .rounded-lg {
@@ -738,14 +814,6 @@ video {
   border-width: 2px;
 }
 
-.border {
-  border-width: 1px;
-}
-
-.border-b {
-  border-bottom-width: 1px;
-}
-
 .border-b-2 {
   border-bottom-width: 2px;
 }
@@ -753,11 +821,6 @@ video {
 .border-darkBlue {
   --tw-border-opacity: 1;
   border-color: rgb(53 44 72 / var(--tw-border-opacity));
-}
-
-.border-primaryBlue {
-  --tw-border-opacity: 1;
-  border-color: rgb(89 63 216 / var(--tw-border-opacity));
 }
 
 .border-b-darkBlue {
@@ -795,9 +858,9 @@ video {
   background-color: rgb(89 63 216 / var(--tw-bg-opacity));
 }
 
-.bg-red-400 {
+.bg-slate-200 {
   --tw-bg-opacity: 1;
-  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
+  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 }
 
 .bg-white {
@@ -854,6 +917,11 @@ video {
   padding-right: 1.25rem;
 }
 
+.px-7 {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
+
 .px-8 {
   padding-left: 2rem;
   padding-right: 2rem;
@@ -904,6 +972,11 @@ video {
 .text-darkBlue {
   --tw-text-opacity: 1;
   color: rgb(53 44 72 / var(--tw-text-opacity));
+}
+
+.text-primaryBlue {
+  --tw-text-opacity: 1;
+  color: rgb(89 63 216 / var(--tw-text-opacity));
 }
 
 .text-slate-700 {

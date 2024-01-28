@@ -5,9 +5,9 @@ import Layout from "../components/Layout";
 import DataService from "../../utils/DateService";
 import { useState } from "react";
 
-const WeekTabItem = ({ item, today }) => {	
+const WeekTabItem = ({ item, today, index }) => {	
 	return (
-		<div className={`${item.date.isSame(today) ? "border-b-2 border-b-darkBlue" : ""}`}>
+		<div key={index} className={`${item.date.isSame(today) ? "border-b-2 border-b-darkBlue" : ""}`}>
 			<h2>{item.date.format("DD")} - {item.day}</h2>
 		</div>
 	)
@@ -21,7 +21,6 @@ const Index = () => {
 	const [activeDay, setActiveDay] = useState(week[today.day()].date);
 
 	const [weekData, setWeekData] = useState([]);
-
 
 	console.log(activeDay)
 	
@@ -43,7 +42,7 @@ const Index = () => {
 					<div className="flex justify-center">
 						<div className="flex flex-row gap-8">
 							{
-								week.map((item) => <WeekTabItem item={item} today={today}/>)
+								week.map((item, index) => <WeekTabItem index={index} item={item} today={today}/>)
 							}
 						</div>
 					</div>

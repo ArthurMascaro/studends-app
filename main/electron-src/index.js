@@ -10,7 +10,8 @@ const url_1 = require("url");
 const electron_1 = require("electron");
 const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
 const electron_next_1 = __importDefault(require("electron-next"));
-const UserController_1 = require("../api/services/UserController");
+//Controllers
+const UserDAO_1 = __importDefault(require("../api/repositories/UserDAO"));
 // Prepare the renderer once the app is ready
 electron_1.app.on("ready", async () => {
     await (0, electron_next_1.default)("./renderer");
@@ -36,6 +37,8 @@ electron_1.app.on("ready", async () => {
 });
 // Quit the app once all windows are closed
 electron_1.app.on("window-all-closed", electron_1.app.quit);
-electron_1.ipcMain.on("get-users", UserController_1.findAllUsers);
-electron_1.ipcMain.on("create-user", UserController_1.createUser);
 electron_1.ipcMain.on("hi", () => console.log("hi"));
+//user events 
+const userDAO = new UserDAO_1.default();
+electron_1.ipcMain.on("create-user", userDAO.create);
+electron_1.ipcMain.on("update-user", userDAO.update);

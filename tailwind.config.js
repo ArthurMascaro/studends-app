@@ -9,7 +9,10 @@ module.exports = {
         lightGray: "#E7EFF1",
         lightGreen: "#55FBDC",
         lightRed: "#FF3D83"
-      }
+      },
+      maxHeight: {
+        '3/5': '60%', 
+      },
     },
   },
   plugins: [],
