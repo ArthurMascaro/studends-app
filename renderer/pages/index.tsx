@@ -4,14 +4,8 @@ import Layout from "../components/Layout";
 
 import DataService from "../../utils/DateService";
 import { useState } from "react";
+import Calendar from "../components/Calendar";
 
-const WeekTabItem = ({ item, today, index }) => {	
-	return (
-		<div key={index} className={`${item.date.isSame(today) ? "border-b-2 border-b-darkBlue" : ""}`}>
-			<h2>{item.date.format("DD")} - {item.day}</h2>
-		</div>
-	)
-}
 
 const Index = () => {
 
@@ -22,7 +16,10 @@ const Index = () => {
 
 	const [weekData, setWeekData] = useState([]);
 
-	console.log(activeDay)
+	const handleSelectDay = (item) => {
+		const { day, date } = item;
+		setActiveDay(week[date.day()].date);
+	}
 	
 	return (
 		<div>
@@ -39,11 +36,20 @@ const Index = () => {
 					</div>
 				</Header>
 				<Content>
-					<div className="flex justify-center">
-						<div className="flex flex-row gap-8">
+					<div className="flex h-full flex-col items-center">
+						<div className="flex gap-6 rounded-md bg-white shadow-md w-fit">
 							{
-								week.map((item, index) => <WeekTabItem index={index} item={item} today={today}/>)
+								week.map((item, index) => {
+									return (
+										<div style={{ userSelect: "none" }} onClick={() => handleSelectDay(item)} key={index} className={`${item.date.isSame(activeDay) ? "border-b-2 border-b-darkBlue" : ""} m-2 p-1 hover:bg-slate-400`}>
+											<h2 className="text-lg font-bold text-darkBlue">{item.date.format("DD")} - {item.day}</h2>
+										</div>
+									)
+								})
 							}
+						</div>
+						<div className="flex w-full my-5 h-full justify-center">
+							<Calendar day={activeDay}/>
 						</div>
 					</div>
 				</Content>
