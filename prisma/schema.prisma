@@ -41,7 +41,6 @@ model Phone {
 
 model Lesson {
   id String @id @default(uuid())
-  date DateTime
   startAt DateTime
   endAt DateTime
   value Float
@@ -63,33 +62,11 @@ model Lecture {
 
   user User @relation(fields: [user_cpf], references: [cpf])
   lesson Lesson @relation(fields: [lesson_id], references: [id])
-  day Day @relation(fields: [day_id], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   @@map("lectures")
-}
-
-model Day {
-  id String @id @default(uuid())
-  name String 
-  date DateTime
-  lectures Lecture[]
-  week_id String
-
-  Week Week @relation(fields: [week_id], references: [id])
-
-  @@map("days")
-}
-
-model Week {
-  id String @id @default(uuid())
-  startAt DateTime
-  endAt DateTime
-  days Day[]
-
-  @@map("weeks")
 }
 
 
