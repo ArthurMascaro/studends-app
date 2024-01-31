@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import Modal from "./Modal";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { randomUUID } from "crypto";
 
 const ModalTriggerButton = () => {
     return (
@@ -32,15 +33,15 @@ enum GradeTypeEnum {
 }
 
 interface FormData {
-    student: String,
-    mother: String,
-    phone1: String,
-    phone2: String | any,
-    bornDate: Date | String,
+    student: string,
+    mother: string,
+    phone1: string,
+    phone2: string | any,
+    bornDate: string,
     gradeYear: GradeYearEnum,
     gradeType: GradeTypeEnum,
-    cpf: String,
-    obs: String
+    cpf: string,
+    obs: string
 }
 
 const StudentModal = () => {
@@ -54,16 +55,18 @@ const StudentModal = () => {
 
         const { student, mother, phone1, phone2, bornDate, gradeYear, gradeType, cpf, obs } = data;
 
+        const formattedBornDate = new Date(bornDate).toISOString();
+
         const payload = {
             name: student,
             motherName: mother,
-            bornDate,
+            bornDate: formattedBornDate,
             grade: `${GradeYearEnum[gradeYear]} Ano ${GradeTypeEnum[gradeType]}`,
             cpf,
             observation: obs
         }
-
-        console.log(payload);
+        
+    
         window.main.send("create-user", payload);
     }
 
