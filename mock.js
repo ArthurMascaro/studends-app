@@ -90,10 +90,10 @@ const amout = [
 -- (OK) Consultar alunos => Por nome, telefone, nome da mãe, alunos em divida (tem que fazer join) e série (tipo grade == "1° Ano E.M.")
     ainda não sei como unir todas as consultas no front mas é bom deixar feito
 
-Pagina aulas => Listar todas as aulas em ordem da mais nova para a mais velha (tenta fazer o bd recuperar de 20 em 20, por exemplo, 
+-- (OK) Pagina aulas => Listar todas as aulas em ordem da mais nova para a mais velha (tenta fazer o bd recuperar de 20 em 20, por exemplo, 
     assim eu faço paginação e não fica lerdo)
 
-Listar aulas de acordo com o nome do aluno (se puder retornar até X consultas, faço paginação)
+-- (OK) Listar aulas de acordo com o cpf do aluno (com implementação de paginação)
 
 -- (OK) Criar aula => os dados são enviados já formatados, mas preciso de uma serviço que verifique se uma aula está cadastrada
     no mesmo horario e dia que outra (não vou impedir o cadastro, apenas avisar que já tem uma aula no horário)
