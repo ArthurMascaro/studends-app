@@ -5,7 +5,6 @@ export interface ICreateStudent {
     bornDate: Date;
     grade: string;
     observation?: string;
-    owing?: number;
 }
 
 export interface IStudent {
@@ -24,7 +23,7 @@ export interface ICreatePhone{
     number: string
 }
 
-export interface IPhone{
+export interface ICreatePhone{
     id: string
     user_cpf: string
     number: string
