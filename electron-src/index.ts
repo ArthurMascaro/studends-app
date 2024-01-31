@@ -51,6 +51,8 @@ const lessonDAO = new LessonDAO();
 
 const lectureDAO = new LectureDAO();
 
+
+// Manipuladores de eventos para operações de usuário
 ipcMain.on("create-user", (event, data) => {
     userDAO.create(event, data).catch(error => console.error(error));
 });
@@ -71,6 +73,36 @@ ipcMain.on("find-all-users", (event) => {
     userDAO.findAll(event).catch(error => console.error(error));
 });
 
+ipcMain.on("find-user-by-name", (event, name) => {
+	userDAO.findUserByName(event, name).catch(error => console.error(error));
+});
+
+ipcMain.on("find-user-by-mother-name", (event, motherName) => {
+	userDAO.findUserByMotherName(event, motherName).catch(error => console.error(error));
+});
+
+ipcMain.on("find-user-by-grade", (event, grade) => {
+	userDAO.findByGrade(event, grade).catch(error => console.error(error));
+});
+
+ipcMain.on("find-user-by-phone", (event, phone) => {
+	userDAO.findUserByPhone(event, phone).catch(error => console.error(error));
+});
+
+ipcMain.on("find-user-by-born-date", (event, bornDate) => {
+	userDAO.findByBornDate(event, bornDate).catch(error => console.error(error));
+});
+
+ipcMain.on("find-users-in-debt", (event) => {
+	userDAO.findStudentsInDebt(event).catch(error => console.error(error));
+});
+
+ipcMain.on("find-debt-amount-by-user", (event, cpf) => {
+	userDAO.findDebtAmountByUser(event, cpf).catch(error => console.error(error));
+});
+
+
+
 // Manipuladores de eventos para operações de telefone
 ipcMain.on("create-phone", (event, data) => {
     userDAO.createPhone(event, data).catch(error => console.error(error));
@@ -88,6 +120,9 @@ ipcMain.on("find-all-phones-by-user-cpf", (event, user_cpf) => {
     userDAO.findAllPhonesByUserCpf(event, user_cpf).catch(error => console.error(error));
 });
 
+
+
+// Manipuladores de eventos para operações de lições
 ipcMain.on("create-lesson", (event, data) => {
 	lessonDAO.create(event, data).catch(error => console.error(error));
 });
@@ -108,6 +143,9 @@ ipcMain.on("find-all-lessons", (event) => {
 	lessonDAO.findAll(event).catch(error => console.error(error));
 });
 
+
+
+// Manipuladores de eventos para operações de aulas
 ipcMain.on("create-lecture", (event, data) => {
 	lectureDAO.create(event, data).catch(error => console.error(error));
 });
