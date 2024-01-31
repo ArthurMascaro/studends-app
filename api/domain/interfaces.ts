@@ -21,6 +21,11 @@ export interface IStudent {
 }
 
 export interface ICreatePhone{
+    user_cpf: string
+    number: string
+}
+
+export interface IPhone{
     id: string
     user_cpf: string
     number: string
@@ -34,32 +39,31 @@ export interface IPhone {
     updated_at: Date;
 }
 
-export interface ILesson {
-    id: string;
-    date: Date;
+export interface ICreateLesson {
     startAt: Date;
     endAt: Date;
     value: number;
 }
 
-export interface ILecture {
+export interface ILesson {
     id: string;
-    student: IStudent;
-    lesson: ILesson;
+    startAt: Date;
+    endAt: Date;
+    value: number;
+}
+
+export interface ICreateLecture {
+    user_cpf: string;
+    lesson_id: string;
     payed: boolean;
     presence: boolean;
 }
 
-export interface IDay {
-    name: string;
-    date: Date;
-    lessons: ILecture[];
-}
-
-export interface IWeek {
-    start: Date;
-    end: Date;
-    totalLessons: number;
-    days: IDay[];
+export interface ILecture {
+    id: string;
+    user_cpf: string;
+    lesson_id: string;
+    payed: boolean;
+    presence: boolean;
 }
 
