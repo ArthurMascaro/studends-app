@@ -220,6 +220,24 @@ class UserDAO {
         event.reply("find-debt-amount-by-user-error", error.message);
       }
     }
+
+    async findAllUserByLectureId(event: any, lectureId: string) {
+      try {
+          const user: IStudent[] = await this.prisma.user.findMany({
+              where: {
+                  lectures: {
+                      some: {
+                          id: lectureId
+                      }
+                  }
+              }
+          });
+
+          event.reply("find-user-by-lecture-id-success", user);
+      } catch (error: any) {
+          event.reply("find-user-by-lecture-id-error", error.message);
+      }
+  }
 }
 
 export default UserDAO;
