@@ -10,6 +10,7 @@ import prepareNext from "electron-next";
 //Controllers
 import UserDAO from "../api/repositories/UserDAO";
 import LessonDAO from "../api/repositories/LessonDAO";
+import LectureDAO from "../api/repositories/LectureDAO";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -47,6 +48,8 @@ ipcMain.on("hi", () => console.log("hi"));
 const userDAO = new UserDAO();
 
 const lessonDAO = new LessonDAO();
+
+const lectureDAO = new LectureDAO();
 
 ipcMain.on("create-user", (event, data) => {
     userDAO.create(event, data).catch(error => console.error(error));
@@ -103,4 +106,24 @@ ipcMain.on("find-lesson-by-id", (event, id) => {
 
 ipcMain.on("find-all-lessons", (event) => {
 	lessonDAO.findAll(event).catch(error => console.error(error));
+});
+
+ipcMain.on("create-lecture", (event, data) => {
+	lectureDAO.create(event, data).catch(error => console.error(error));
+});
+
+ipcMain.on("update-lecture", (event, id, newData) => {
+	lectureDAO.update(event, id, newData).catch(error => console.error(error));
+});
+
+ipcMain.on("delete-lecture", (event, id) => {
+	lectureDAO.delete(event, id).catch(error => console.error(error));
+});
+
+ipcMain.on("find-lecture-by-id", (event, id) => {
+	lectureDAO.findById(event, id).catch(error => console.error(error));
+});
+
+ipcMain.on("find-all-lectures", (event) => {
+	lectureDAO.findAll(event).catch(error => console.error(error));
 });
