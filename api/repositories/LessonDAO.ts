@@ -90,6 +90,24 @@ class LessonDAO{
             event.reply("delete-lesson-error", error.message);
         }
     }
+
+    async findByLectureId(event: any, lectureId: string) {
+        try {
+            const lesson: ILesson | null = await this.prisma.lesson.findFirst({
+                where: {
+                    lectures: {
+                        some: {
+                            id: lectureId
+                        }
+                    }
+                }
+            });
+
+            event.reply("find-lesson-by-lecture-id-success", lesson);
+        } catch (error: any) {
+            event.reply("find-lesson-by-lecture-id-error", error.message);
+        }
+    }
 }
 
 export default LessonDAO;
