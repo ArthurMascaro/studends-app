@@ -73,16 +73,21 @@ const amout = [
 ]
 
 /*
-Pagina inicial => retornar a consulta da semana (pegar data do server e encontrar a semana 
+-- (OK -> fiz um pouco diferente,
+    te retorno todas as lectures da semana
+    e ai por cada lecture fiz queries pra user e lesson
+    que você pode achar cada um deles pela lecture id) Pagina inicial => retornar a consulta da semana (pegar data do server e encontrar a semana 
     que essa data pertence, retornar todos os dias dessa semana com numero, nome e aulas do dia; a
     aula contém o nome do aluno e o atributo de valor da divida ( puxado do banco) )
 
-Adicionar aluno => receber dados e adicionar (pode telefones iguais, nome mãe igual; telefone, CPF e 
+-- (OK) Adicionar aluno => receber dados e adicionar (pode telefones iguais, nome mãe igual; telefone, CPF e 
     serie já chegarão formatadas com regex para telefone e cpf e a serie com selector )
 
-Pagina de alunos => Listar todos os alunos com a junção de aulas em divida (valor owing)
+-- (OK -> método pra achar numero de aulas em dividas
+    método para achar valor total em dívida
+    método para achar usuários em divida) Pagina de alunos => Listar todos os alunos com a junção de aulas em divida (valor owing)
 
-Consultar alunos => Por nome, telefone, nome da mãe, alunos em divida (tem que fazer join) e série (tipo grade == "1° Ano E.M.")
+-- (OK) Consultar alunos => Por nome, telefone, nome da mãe, alunos em divida (tem que fazer join) e série (tipo grade == "1° Ano E.M.")
     ainda não sei como unir todas as consultas no front mas é bom deixar feito
 
 Pagina aulas => Listar todas as aulas em ordem da mais nova para a mais velha (tenta fazer o bd recuperar de 20 em 20, por exemplo, 
@@ -90,7 +95,7 @@ Pagina aulas => Listar todas as aulas em ordem da mais nova para a mais velha (t
 
 Listar aulas de acordo com o nome do aluno (se puder retornar até X consultas, faço paginação)
 
-Criar aula => os dados são enviados já formatados, mas preciso de uma serviço que verifique se uma aula está cadastrada
+-- (OK) Criar aula => os dados são enviados já formatados, mas preciso de uma serviço que verifique se uma aula está cadastrada
     no mesmo horario e dia que outra (não vou impedir o cadastro, apenas avisar que já tem uma aula no horário)
 
 Consulta valores => agrupar dados de aulas por nome de aluno e por mes, somando os lucros de cada aluno e o total de aulas
