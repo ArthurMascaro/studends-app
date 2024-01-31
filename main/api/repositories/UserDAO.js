@@ -7,11 +7,8 @@ class UserDAO {
         this.prisma = new client_1.PrismaClient();
     }
     async create(event, data) {
-        console.log("avsvasvzvxz");
         try {
-            console.log(this.prisma);
             const result = await this.prisma.user.create({ data });
-            console.log("alo");
             return event.reply("create-user-success", result);
         }
         catch (error) {
