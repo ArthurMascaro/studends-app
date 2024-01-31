@@ -40,5 +40,31 @@ electron_1.app.on("window-all-closed", electron_1.app.quit);
 electron_1.ipcMain.on("hi", () => console.log("hi"));
 //user events 
 const userDAO = new UserDAO_1.default();
-electron_1.ipcMain.on("create-user", userDAO.create);
-electron_1.ipcMain.on("update-user", userDAO.update);
+electron_1.ipcMain.on("create-user", (event, data) => {
+    userDAO.create(event, data).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("update-user", (event, cpf, newData) => {
+    userDAO.update(event, cpf, newData).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("delete-user", (event, cpf) => {
+    userDAO.delete(event, cpf).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("find-user-by-id", (event, cpf) => {
+    userDAO.findById(event, cpf).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("find-all-users", (event) => {
+    userDAO.findAll(event).catch(error => console.error(error));
+});
+// Manipuladores de eventos para operações de telefone
+electron_1.ipcMain.on("create-phone", (event, data) => {
+    userDAO.createPhone(event, data).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("update-phone", (event, id, newData) => {
+    userDAO.updatePhone(event, id, newData).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("delete-phone", (event, id) => {
+    userDAO.deletePhone(event, id).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("find-all-phones-by-user-cpf", (event, user_cpf) => {
+    userDAO.findAllPhonesByUserCpf(event, user_cpf).catch(error => console.error(error));
+});
