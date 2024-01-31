@@ -15,7 +15,6 @@ export interface IStudent {
     bornDate: Date;
     grade: string;
     observation: string | null;
-    owing: number | null;
     created_at: Date;
     updated_at: Date;
 }
