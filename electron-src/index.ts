@@ -177,3 +177,12 @@ ipcMain.on("find-all-lectures", (event) => {
 ipcMain.on("find-lecture-by-this-week", (event) => {
 	lectureDAO.findLecturesByWeek(event).catch(error => console.error(error));
 });
+
+ipcMain.on("find-all-lectures-sorted-by-date", (event, skip, take) => {
+	lectureDAO.findAllLecturesSortedByDate(event, skip, take).catch(error => console.error(error));
+});
+
+
+ipcMain.on("find-all-lectures-by-student-cpf", (event, user_cpf, skip, take) =>{
+	lectureDAO.findAllLecturesByStudentCPF(event, user_cpf, skip, take)
+});

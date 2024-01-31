@@ -97,6 +97,43 @@ class LectureDAO{
         }
     }
 
+    async findAllLecturesSortedByDate(event: any, skip: number, take: number) {
+        try {
+            const lectures: ILecture[] = await this.prisma.lecture.findMany({
+                orderBy: {
+                    created_at: 'desc'
+                },
+                skip,
+                take
+            });
+
+            event.reply("find-all-lectures-sorted-by-date-success", lectures);
+        } catch (error: any) {
+            event.reply("find-all-lectures-sorted-by-date-error", error.message);
+        }
+    }
+
+    async findAllLecturesByStudentCPF(event: any, user_cpf: string, skip: number, take: number) {
+        try {
+            const lectures: ILecture[] = await this.prisma.lecture.findMany({
+                where: {
+                    user_cpf
+                },
+                orderBy: {
+                    lesson: {
+                        created_at: 'desc'
+                    }
+                },
+                skip,
+                take
+            });
+
+            event.reply("find-all-lectures-by-student-cpf-success", lectures);
+        } catch (error: any) {
+            event.reply("find-all-lectures-by-student-cpf-error", error.message);
+        }
+    }
+
 }
 
 export default LectureDAO;
