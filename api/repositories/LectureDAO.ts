@@ -61,6 +61,42 @@ class LectureDAO{
         }
     }
 
+    async findLecturesByWeek(event: any) {
+        try {
+            const currentDate = new Date();
+            const startDate = new Date(currentDate);
+            startDate.setDate(startDate.getDate() - startDate.getDay()); 
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 6); 
+
+            const lecturesByDay: Record<string, ILecture[]> = {};
+
+            for (let i = 0; i < 7; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(currentDate.getDate() + i);
+                const lectures: ILecture[] = await this.prisma.lecture.findMany({
+                    where: {
+                        lesson: {
+                            startAt: {
+                                gte: new Date(currentDate.setHours(0, 0, 0, 0)),
+                                lte: new Date(currentDate.setHours(23, 59, 59, 999))
+                            }
+                        }
+                    },
+                    include: {
+                        user: true,
+                        lesson: true
+                    }
+                });
+                lecturesByDay[currentDate.toISOString().split('T')[0]] = lectures;
+            }
+
+            event.reply("find-lectures-by-week-success", lecturesByDay);
+        } catch (error: any) {
+            event.reply("find-lectures-by-week-error", error.message);
+        }
+    }
+
 }
 
 export default LectureDAO;

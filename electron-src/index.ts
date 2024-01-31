@@ -101,6 +101,10 @@ ipcMain.on("find-debt-amount-by-user", (event, cpf) => {
 	userDAO.findDebtAmountByUser(event, cpf).catch(error => console.error(error));
 });
 
+ipcMain.on("find-all-users-by-lecture-id", (event, lectureId) => {
+	userDAO.findAllUserByLectureId(event, lectureId).catch(error => console.error(error));
+});
+
 
 
 // Manipuladores de eventos para operações de telefone
@@ -143,6 +147,10 @@ ipcMain.on("find-all-lessons", (event) => {
 	lessonDAO.findAll(event).catch(error => console.error(error));
 });
 
+ipcMain.on("find-lesson-by-lecture-id", (event, lectureId) => {
+	lessonDAO.findByLectureId(event, lectureId).catch(error => console.error(error));
+});
+
 
 
 // Manipuladores de eventos para operações de aulas
@@ -164,4 +172,8 @@ ipcMain.on("find-lecture-by-id", (event, id) => {
 
 ipcMain.on("find-all-lectures", (event) => {
 	lectureDAO.findAll(event).catch(error => console.error(error));
+});
+
+ipcMain.on("find-lecture-by-this-week", (event) => {
+	lectureDAO.findLecturesByWeek(event).catch(error => console.error(error));
 });
