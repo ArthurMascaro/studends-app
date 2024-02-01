@@ -98,7 +98,7 @@ const amout = [
 -- (OK) Criar aula => os dados são enviados já formatados, mas preciso de uma serviço que verifique se uma aula está cadastrada
     no mesmo horario e dia que outra (não vou impedir o cadastro, apenas avisar que já tem uma aula no horário)
 
-Consulta valores => agrupar dados de aulas por nome de aluno e por mes, somando os lucros de cada aluno e o total de aulas
+-- (OK) Consulta valores => agrupar dados de aulas por nome de aluno e por mes, somando os lucros de cada aluno e o total de aulas
     dadas para aquele aluno no mes
 */
 
