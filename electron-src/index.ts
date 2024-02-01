@@ -105,6 +105,22 @@ ipcMain.on("find-all-users-by-lecture-id", (event, lectureId) => {
 	userDAO.findAllUserByLectureId(event, lectureId).catch(error => console.error(error));
 });
 
+ipcMain.on("get-total-profit-by-student", (event, cpf) => {
+	userDAO.getTotalProfitByStudent(event, cpf).catch(error => console.error(error));
+});
+
+ipcMain.on("get-total-profit-by-student-and-month", (event, cpf, month, year) => {
+	userDAO.getTotalProfitByStudentAndMonth(event, cpf, month, year).catch(error => console.error(error));
+});
+
+ipcMain.on("get-total-debt-by-student", (event, cpf) => {
+	userDAO.getTotalDebtByStudent(event, cpf).catch(error => console.error(error));
+});
+
+ipcMain.on("get-total-debt-by-student-and-month", (event, cpf, month, year) => {
+	userDAO.getDebtByStudentAndMonth(event, cpf, month, year).catch(error => console.error(error));
+});
+
 
 
 // Manipuladores de eventos para operações de telefone
@@ -185,4 +201,16 @@ ipcMain.on("find-all-lectures-sorted-by-date", (event, skip, take) => {
 
 ipcMain.on("find-all-lectures-by-student-cpf", (event, user_cpf, skip, take) =>{
 	lectureDAO.findAllLecturesByStudentCPF(event, user_cpf, skip, take)
+});
+
+ipcMain.on("find-all-lectures-by-month", (event, month, year) => {
+	lectureDAO.findAllLecturesByMonth(event, month, year).catch(error => console.error(error));
+});
+
+ipcMain.on("find-all-lectures-by-student-and-month", (event, month, year, user_cpf) => {
+	lectureDAO.findAllLecturesByStudentAndMonth(event, user_cpf, month, year).catch(error => console.error(error));
+});
+
+ipcMain.on("get-total-profit-by-month", (event, month, year) => {
+	lectureDAO.getTotalProfitByMonth(event, month, year).catch(error => console.error(error));
 });
