@@ -617,6 +617,14 @@ video {
   display: flex;
 }
 
+.table {
+  display: table;
+}
+
+.grid {
+  display: grid;
+}
+
 .h-1 {
   height: 0.25rem;
 }
