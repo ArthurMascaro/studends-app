@@ -5,10 +5,10 @@ module.exports = {
     extend: {
       colors: {
         primaryBlue: "#593FD8",
-        darkBlue: "#352C48",
+        darkBlue: "#00007F",
         lightGray: "#E7EFF1",
         lightGreen: "#55FBDC",
-        lightRed: "#FF3D83"
+        lightRed: "#D81CB3"
       },
       maxHeight: {
         '3/5': '60%', 

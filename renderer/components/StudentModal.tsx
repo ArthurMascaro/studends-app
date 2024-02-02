@@ -7,7 +7,7 @@ import { CreateUserFormData, GradeTypeEnum, GradeYearEnum } from "../intefaces";
 const ModalTriggerButton = () => {
     return (
         <div>
-            <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-black">
+            <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-slate-700">
                 <Plus color="white" size={36}/>
             </div>
         </div>
