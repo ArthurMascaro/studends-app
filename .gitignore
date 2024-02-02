@@ -10,7 +10,7 @@
 /coverage
 
 # next.js
-renderer/.next/
+/renderer/.next/
 /.next/
 /out/
 
