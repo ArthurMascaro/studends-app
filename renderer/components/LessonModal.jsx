@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Modal from "./Modal";
 
 const ModalTriggerButton = () => {
@@ -11,10 +12,18 @@ const ModalTriggerButton = () => {
 }
 
 const LessonModal = () => {
+
+    const [open, setOpen] = useState(false);
+
     return (
-        <Modal title="Agendar aula" trigger={<ModalTriggerButton/>} action={null}>
-            <h1>Cadastro de aulas!</h1>
-        </Modal>
+        <div>
+            <Modal title="Agendar aula" isOpen={open} closeModal={() => setOpen(false)}>
+                <h1>Cadastro de aulas!</h1>
+            </Modal>
+            <div onClick={() => setOpen(!open)}>
+                <ModalTriggerButton/>
+            </div>
+        </div>
     )
 }
 

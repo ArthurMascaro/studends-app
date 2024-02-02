@@ -41,11 +41,10 @@ const Students = () => {
 			<Content>
                 <div className="flex h-full flex-col items-center justify-center">
                     <div className="flex flex-col w-11/12 overflow-y-auto">
-                        <h1 className="p-5 m-10">Oi</h1>
-                        <h1 className="p-5 m-10">Oi</h1>
-                        <h1 className="p-5 m-10">Oi</h1>
-                        <h1 className="p-5 m-10">Oi</h1>
-                        <h1 className="p-5 m-10">Oi</h1>
+                        <StudentCard student={students[0]}/>
+                        <StudentCard student={students[1]}/>
+                        <StudentCard student={students[1]}/>
+                        <StudentCard student={students[1]}/>
                     </div>
 				</div>
             </Content>

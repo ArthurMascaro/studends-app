@@ -1,3 +1,4 @@
+import ModalPovider from "../contexts/ModalContext";
 import Navigation from "./Navigation"
 
 const Layout = ({ children }) => {

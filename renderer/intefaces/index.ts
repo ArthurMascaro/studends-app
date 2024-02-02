@@ -16,13 +16,25 @@ export enum GradeTypeEnum {
 }
 
 export interface CreateUserFormData {
-    student: string,
-    mother: string,
+    name: string,
+    motherName: string,
     phone1: string,
     phone2: string | any,
     bornDate: string,
     gradeYear: GradeYearEnum,
     gradeType: GradeTypeEnum,
     cpf: string,
-    obs: string
+    observation: string
+}
+export interface UpdateUserFormData {
+    id: string,
+    name: string,
+    motherName: string,
+    phone1: string,
+    phone2: string | any,
+    bornDate: string,
+    gradeYear: GradeYearEnum,
+    gradeType: GradeTypeEnum,
+    cpf: string,
+    observation: string
 }
