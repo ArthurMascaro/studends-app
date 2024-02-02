@@ -18,10 +18,8 @@ class UserDAO {
     console.log("avsvasvzvxz");
     try {
       const result = await this.prisma.user.create({ data });
-      console.log("alo");
       return event.reply("create-user-success", result);
     } catch (error: any) {
-      console.log(error);
       return event.reply("create-user-error", error.message);
     }
   }

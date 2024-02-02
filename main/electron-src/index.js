@@ -12,8 +12,8 @@ const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
 const electron_next_1 = __importDefault(require("electron-next"));
 //Controllers
 const UserDAO_1 = __importDefault(require("../api/repositories/UserDAO"));
-const LessonDAO_1 = __importDefault(require("../api/repositories/LessonDAO"));
-const LectureDAO_1 = __importDefault(require("../api/repositories/LectureDAO"));
+//import LessonDAO from "../api/repositories/LessonDAO";
+//import LectureDAO from "../api/repositories/LectureDAO";
 // Prepare the renderer once the app is ready
 electron_1.app.on("ready", async () => {
     await (0, electron_next_1.default)("./renderer");
@@ -42,8 +42,8 @@ electron_1.app.on("window-all-closed", electron_1.app.quit);
 electron_1.ipcMain.on("hi", () => console.log("hi"));
 //user events 
 const userDAO = new UserDAO_1.default();
-const lessonDAO = new LessonDAO_1.default();
-const lectureDAO = new LectureDAO_1.default();
+//const lessonDAO = new LessonDAO();
+//const lectureDAO = new LectureDAO();
 // Manipuladores de eventos para operações de usuário
 electron_1.ipcMain.on("create-user", (event, data) => {
     userDAO.create(event, data).catch(error => console.error(error));
@@ -84,6 +84,18 @@ electron_1.ipcMain.on("find-debt-amount-by-user", (event, cpf) => {
 electron_1.ipcMain.on("find-all-users-by-lecture-id", (event, lectureId) => {
     userDAO.findAllUserByLectureId(event, lectureId).catch(error => console.error(error));
 });
+electron_1.ipcMain.on("get-total-profit-by-student", (event, cpf) => {
+    userDAO.getTotalProfitByStudent(event, cpf).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("get-total-profit-by-student-and-month", (event, cpf, month, year) => {
+    userDAO.getTotalProfitByStudentAndMonth(event, cpf, month, year).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("get-total-debt-by-student", (event, cpf) => {
+    userDAO.getTotalDebtByStudent(event, cpf).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("get-total-debt-by-student-and-month", (event, cpf, month, year) => {
+    userDAO.getDebtByStudentAndMonth(event, cpf, month, year).catch(error => console.error(error));
+});
 // Manipuladores de eventos para operações de telefone
 electron_1.ipcMain.on("create-phone", (event, data) => {
     userDAO.createPhone(event, data).catch(error => console.error(error));
@@ -98,46 +110,74 @@ electron_1.ipcMain.on("find-all-phones-by-user-cpf", (event, user_cpf) => {
     userDAO.findAllPhonesByUserCpf(event, user_cpf).catch(error => console.error(error));
 });
 // Manipuladores de eventos para operações de lições
-electron_1.ipcMain.on("create-lesson", (event, data) => {
+/*ipcMain.on("create-lesson", (event, data) => {
     lessonDAO.create(event, data).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("update-lesson", (event, id, newData) => {
+
+ipcMain.on("update-lesson", (event, id, newData) => {
     lessonDAO.update(event, id, newData).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("delete-lesson", (event, id) => {
+
+ipcMain.on("delete-lesson", (event, id) => {
     lessonDAO.delete(event, id).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-lesson-by-id", (event, id) => {
+
+ipcMain.on("find-lesson-by-id", (event, id) => {
     lessonDAO.findById(event, id).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-all-lessons", (event) => {
+
+ipcMain.on("find-all-lessons", (event) => {
     lessonDAO.findAll(event).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-lesson-by-lecture-id", (event, lectureId) => {
+
+ipcMain.on("find-lesson-by-lecture-id", (event, lectureId) => {
     lessonDAO.findByLectureId(event, lectureId).catch(error => console.error(error));
 });
-// Manipuladores de eventos para operações de aulas
-electron_1.ipcMain.on("create-lecture", (event, data) => {
+
+
+
+Manipuladores de eventos para operações de aulas
+ipcMain.on("create-lecture", (event, data) => {
     lectureDAO.create(event, data).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("update-lecture", (event, id, newData) => {
+
+ipcMain.on("update-lecture", (event, id, newData) => {
     lectureDAO.update(event, id, newData).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("delete-lecture", (event, id) => {
+
+ipcMain.on("delete-lecture", (event, id) => {
     lectureDAO.delete(event, id).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-lecture-by-id", (event, id) => {
+
+ipcMain.on("find-lecture-by-id", (event, id) => {
     lectureDAO.findById(event, id).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-all-lectures", (event) => {
+
+ipcMain.on("find-all-lectures", (event) => {
     lectureDAO.findAll(event).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-lecture-by-this-week", (event) => {
+
+ipcMain.on("find-lecture-by-this-week", (event) => {
     lectureDAO.findLecturesByWeek(event).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-all-lectures-sorted-by-date", (event, skip, take) => {
+
+ipcMain.on("find-all-lectures-sorted-by-date", (event, skip, take) => {
     lectureDAO.findAllLecturesSortedByDate(event, skip, take).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-all-lectures-by-student-cpf", (event, user_cpf, skip, take) => {
-    lectureDAO.findAllLecturesByStudentCPF(event, user_cpf, skip, take);
+
+
+ipcMain.on("find-all-lectures-by-student-cpf", (event, user_cpf, skip, take) =>{
+    lectureDAO.findAllLecturesByStudentCPF(event, user_cpf, skip, take)
 });
+
+ipcMain.on("find-all-lectures-by-month", (event, month, year) => {
+    lectureDAO.findAllLecturesByMonth(event, month, year).catch(error => console.error(error));
+});
+
+ipcMain.on("find-all-lectures-by-student-and-month", (event, month, year, user_cpf) => {
+    lectureDAO.findAllLecturesByStudentAndMonth(event, user_cpf, month, year).catch(error => console.error(error));
+});
+
+ipcMain.on("get-total-profit-by-month", (event, month, year) => {
+    lectureDAO.getTotalProfitByMonth(event, month, year).catch(error => console.error(error));
+});*/ 

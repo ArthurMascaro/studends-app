@@ -9,8 +9,8 @@ import prepareNext from "electron-next";
 
 //Controllers
 import UserDAO from "../api/repositories/UserDAO";
-import LessonDAO from "../api/repositories/LessonDAO";
-import LectureDAO from "../api/repositories/LectureDAO";
+//import LessonDAO from "../api/repositories/LessonDAO";
+//import LectureDAO from "../api/repositories/LectureDAO";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -47,9 +47,9 @@ ipcMain.on("hi", () => console.log("hi"));
 //user events 
 const userDAO = new UserDAO();
 
-const lessonDAO = new LessonDAO();
+//const lessonDAO = new LessonDAO();
 
-const lectureDAO = new LectureDAO();
+//const lectureDAO = new LectureDAO();
 
 
 // Manipuladores de eventos para operações de usuário
@@ -143,7 +143,7 @@ ipcMain.on("find-all-phones-by-user-cpf", (event, user_cpf) => {
 
 
 // Manipuladores de eventos para operações de lições
-ipcMain.on("create-lesson", (event, data) => {
+/*ipcMain.on("create-lesson", (event, data) => {
 	lessonDAO.create(event, data).catch(error => console.error(error));
 });
 
@@ -169,7 +169,7 @@ ipcMain.on("find-lesson-by-lecture-id", (event, lectureId) => {
 
 
 
-// Manipuladores de eventos para operações de aulas
+Manipuladores de eventos para operações de aulas
 ipcMain.on("create-lecture", (event, data) => {
 	lectureDAO.create(event, data).catch(error => console.error(error));
 });
@@ -213,4 +213,4 @@ ipcMain.on("find-all-lectures-by-student-and-month", (event, month, year, user_c
 
 ipcMain.on("get-total-profit-by-month", (event, month, year) => {
 	lectureDAO.getTotalProfitByMonth(event, month, year).catch(error => console.error(error));
-});
+});*/

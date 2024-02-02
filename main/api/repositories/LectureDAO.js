@@ -18,7 +18,7 @@ class LectureDAO {
     async findById(event, id) {
         try {
             const result = await this.prisma.lecture.findUnique({
-                where: { id }
+                where: { id },
             });
             event.reply("find-lecture-by-id-success", result);
         }
@@ -39,7 +39,7 @@ class LectureDAO {
         try {
             const result = await this.prisma.lecture.update({
                 where: { id },
-                data: newData
+                data: newData,
             });
             event.reply("update-lecture-success", result);
         }
@@ -50,7 +50,7 @@ class LectureDAO {
     async delete(event, id) {
         try {
             const result = await this.prisma.lecture.delete({
-                where: { id }
+                where: { id },
             });
             event.reply("delete-lecture-success", result);
         }
@@ -74,16 +74,16 @@ class LectureDAO {
                         lesson: {
                             startAt: {
                                 gte: new Date(currentDate.setHours(0, 0, 0, 0)),
-                                lte: new Date(currentDate.setHours(23, 59, 59, 999))
-                            }
-                        }
+                                lte: new Date(currentDate.setHours(23, 59, 59, 999)),
+                            },
+                        },
                     },
                     include: {
                         user: true,
-                        lesson: true
-                    }
+                        lesson: true,
+                    },
                 });
-                lecturesByDay[currentDate.toISOString().split('T')[0]] = lectures;
+                lecturesByDay[currentDate.toISOString().split("T")[0]] = lectures;
             }
             event.reply("find-lectures-by-week-success", lecturesByDay);
         }
@@ -95,10 +95,10 @@ class LectureDAO {
         try {
             const lectures = await this.prisma.lecture.findMany({
                 orderBy: {
-                    created_at: 'desc'
+                    created_at: "desc",
                 },
                 skip,
-                take
+                take,
             });
             event.reply("find-all-lectures-sorted-by-date-success", lectures);
         }
@@ -110,20 +110,81 @@ class LectureDAO {
         try {
             const lectures = await this.prisma.lecture.findMany({
                 where: {
-                    user_cpf
+                    user_cpf,
                 },
                 orderBy: {
                     lesson: {
-                        created_at: 'desc'
-                    }
+                        created_at: "desc",
+                    },
                 },
                 skip,
-                take
+                take,
             });
             event.reply("find-all-lectures-by-student-cpf-success", lectures);
         }
         catch (error) {
             event.reply("find-all-lectures-by-student-cpf-error", error.message);
+        }
+    }
+    async findAllLecturesByMonth(event, month, year) {
+        try {
+            const lectures = await this.prisma.lecture.findMany({
+                where: {
+                    lesson: {
+                        startAt: {
+                            gte: new Date(year, month - 1, 1),
+                            lt: new Date(year, month, 1),
+                        },
+                    },
+                },
+                include: {
+                    user: true,
+                    lesson: true,
+                },
+            });
+            event.reply("find-lectures-by-month-success", lectures);
+        }
+        catch (error) {
+            event.reply("find-lectures-by-month-error", error.message);
+        }
+    }
+    async findAllLecturesByStudentAndMonth(event, user_cpf, month, year) {
+        try {
+            const lectures = await this.prisma.lecture.findMany({
+                where: {
+                    user_cpf,
+                    lesson: {
+                        startAt: {
+                            gte: new Date(year, month - 1, 1),
+                            lt: new Date(year, month, 1),
+                        },
+                    },
+                },
+                include: { lesson: true },
+            });
+            event.reply("find-all-lectures-by-student-and-month-success", lectures);
+        }
+        catch (error) {
+            event.reply("find-all-lectures-by-student-and-month-error", error.message);
+        }
+    }
+    async getTotalProfitByMonth(event, month, year) {
+        try {
+            const profitByMonth = await this.prisma.$queryRaw `
+            SELECT 
+                SUM(ls.value) AS total_profit
+            FROM
+                lectures l
+                JOIN lessons ls ON l.lesson_id = ls.id
+            WHERE
+                l.payed = true
+                AND EXTRACT(MONTH FROM ls.start_at) = ${month}
+                AND EXTRACT(YEAR FROM ls.start_at) = ${year};
+        `;
+            event.reply("get-total-profit-by-month-success", profitByMonth[0].total_profit);
+        }
+        catch (error) {
+            event.reply("get-total-profit-by-month-error", error.message);
         }
     }
 }

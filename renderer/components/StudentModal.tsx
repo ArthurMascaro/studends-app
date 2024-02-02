@@ -1,58 +1,32 @@
 import { Plus } from "lucide-react";
 import Modal from "./Modal";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { randomUUID } from "crypto";
+import { toast } from "react-hot-toast";
+import { CreateUserFormData, GradeTypeEnum, GradeYearEnum } from "../intefaces";
 
 const ModalTriggerButton = () => {
     return (
         <div>
-            <div className="flex flex-row gap-4 py-3 px-2 w-full bg-lightRed items-center rounded-md shadow-lg">
-                <Plus color="white"/>
-                <h1 className="text-md font-bold text-white" style={{userSelect: "none"}}>Novo Aluno</h1>
+            <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-black">
+                <Plus color="white" size={36}/>
             </div>
         </div>
     )
 }
 
-enum GradeYearEnum {
-    y1 = "1°",
-    y2 = "2°",
-    y3 = "3°",
-    y4 = "4°",
-    y5 = "5°",
-    y6 = "6°",
-    y7 = "7°",
-    y8 = "8°",
-    y9 = "9°"
-}
-
-enum GradeTypeEnum {
-    EM = "E.M.",
-    EF = "E.F."
-}
-
-interface FormData {
-    student: string,
-    mother: string,
-    phone1: string,
-    phone2: string | any,
-    bornDate: string,
-    gradeYear: GradeYearEnum,
-    gradeType: GradeTypeEnum,
-    cpf: string,
-    obs: string
-}
 
 const StudentModal = () => {
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
-
-    const [student, setStudent] = useState(null);
-
-    const onSubmit = (data: FormData) => {
+    const handleSuccess = (event, data) => { 
+        toast.success("Aluno cadastrado!");
         reset();
+    };
 
+    const handleError = (event, data) => toast.error("Aluno cadastrado!");
+
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateUserFormData>();
+
+    const onSubmit = (data: CreateUserFormData) => {
         const { student, mother, phone1, phone2, bornDate, gradeYear, gradeType, cpf, obs } = data;
 
         const formattedBornDate = new Date(bornDate).toISOString();
@@ -64,20 +38,24 @@ const StudentModal = () => {
             grade: `${GradeYearEnum[gradeYear]} Ano ${GradeTypeEnum[gradeType]}`,
             cpf,
             observation: obs
-        }
-        
-    
+        }    
         window.main.send("create-user", payload);
-    }
 
+        window.main.receive("create-user-success", handleSuccess);
+        window.main.stop("create-user-success", handleSuccess);
+
+        window.main.receive("create-user-error", handleError);
+        window.main.stop("create-user-error", handleError);
+    }
+   
     let years = [];
     for (let i = 1; i < 10; i++) {
         years.push({ value: `y${i}`, text: `${i}°` });
     }
 
     return (
-        <Modal trigger={<ModalTriggerButton/>} action={reset} title="Cadastrar novo aluno">
-            <div className="flex justify-center items-center w-full my-2 h-3/5" style={{userSelect: "none"}}>
+        <Modal trigger={<ModalTriggerButton/>} action={reset} title="Cadastrar aluno">
+            <div className="flex justify-center items-center w-full my-2 h-4/5" style={{userSelect: "none"}}>
                 <form className="overflow-auto h-96" onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col px-5 my-3">
                         <label className="text-darkBlue font-bold text-lg mx-5">Nome:</label>

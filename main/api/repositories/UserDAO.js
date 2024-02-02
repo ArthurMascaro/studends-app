@@ -10,11 +10,9 @@ class UserDAO {
         console.log("avsvasvzvxz");
         try {
             const result = await this.prisma.user.create({ data });
-            console.log("alo");
             return event.reply("create-user-success", result);
         }
         catch (error) {
-            console.log(error);
             return event.reply("create-user-error", error.message);
         }
     }
@@ -73,7 +71,7 @@ class UserDAO {
     async findAllPhonesByUserCpf(event, user_cpf) {
         try {
             const result = await this.prisma.phone.findMany({
-                where: { user_cpf }
+                where: { user_cpf },
             });
             event.reply("find-all-phones-success", result);
         }
@@ -220,15 +218,129 @@ class UserDAO {
                 where: {
                     lectures: {
                         some: {
-                            id: lectureId
-                        }
-                    }
-                }
+                            id: lectureId,
+                        },
+                    },
+                },
             });
             event.reply("find-user-by-lecture-id-success", user);
         }
         catch (error) {
             event.reply("find-user-by-lecture-id-error", error.message);
+        }
+    }
+    async getTotalProfitByStudent(event, user_cpf) {
+        try {
+            const payedLectures = await this.prisma.lecture.findMany({
+                where: { user_cpf, payed: true },
+                include: { lesson: true },
+            });
+            let totalProfit = 0;
+            for (const lecture of payedLectures) {
+                const lesson = await this.prisma.lesson.findUnique({
+                    where: {
+                        id: lecture.lesson_id,
+                    },
+                });
+                if (lesson) {
+                    totalProfit += lesson.value;
+                }
+            }
+            event.reply("get-total-profit-by-student-success", totalProfit);
+        }
+        catch (error) {
+            event.reply("get-total-profit-by-student-error", error.message);
+        }
+    }
+    async getTotalProfitByStudentAndMonth(event, user_cpf, month, year) {
+        try {
+            const startOfMonth = new Date(year, month - 1, 1);
+            const endOfMonth = new Date(year, month, 0);
+            const payedLectures = await this.prisma.lecture.findMany({
+                where: {
+                    user_cpf,
+                    payed: true,
+                    lesson: {
+                        startAt: {
+                            gte: startOfMonth,
+                            lt: endOfMonth
+                        }
+                    }
+                },
+                include: {
+                    lesson: true
+                },
+            });
+            let totalProfit = 0;
+            for (const lecture of payedLectures) {
+                const lesson = await this.prisma.lesson.findUnique({
+                    where: {
+                        id: lecture.lesson_id,
+                    },
+                });
+                if (lesson) {
+                    totalProfit += lesson.value;
+                }
+            }
+            event.reply("get-total-profit-by-student-last-month-success", totalProfit);
+        }
+        catch (error) {
+            event.reply("get-total-profit-by-student-last-month-error", error.message);
+        }
+    }
+    async getTotalDebtByStudent(event, user_cpf) {
+        try {
+            const unpaidLectures = await this.prisma.lecture.findMany({
+                where: { user_cpf, payed: false },
+                include: { lesson: true },
+            });
+            let totalDebtAmount = 0;
+            for (const lecture of unpaidLectures) {
+                const lesson = await this.prisma.lesson.findUnique({
+                    where: {
+                        id: lecture.lesson_id,
+                    },
+                });
+                if (lesson) {
+                    totalDebtAmount += lesson.value;
+                }
+            }
+            event.reply("get-total-debt-by-student-success", totalDebtAmount);
+        }
+        catch (error) {
+            event.reply("get-total-debt-by-student-error", error.message);
+        }
+    }
+    async getDebtByStudentAndMonth(event, user_cpf, month, year) {
+        try {
+            const unpaidLectures = await this.prisma.lecture.findMany({
+                where: {
+                    user_cpf,
+                    payed: false,
+                    lesson: {
+                        startAt: {
+                            gte: new Date(year, month - 1, 1),
+                            lt: new Date(year, month, 1),
+                        },
+                    },
+                },
+                include: { lesson: true },
+            });
+            let totalDebt = 0;
+            for (const lecture of unpaidLectures) {
+                const lesson = await this.prisma.lesson.findUnique({
+                    where: {
+                        id: lecture.lesson_id,
+                    },
+                });
+                if (lesson) {
+                    totalDebt += lesson.value;
+                }
+            }
+            event.reply("get-debt-by-student-and-month-success", totalDebt);
+        }
+        catch (error) {
+            event.reply("get-debt-by-student-and-month-error", error.message);
         }
     }
 }

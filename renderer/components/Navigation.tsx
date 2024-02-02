@@ -1,14 +1,43 @@
 import Link from "next/link";
 import StudentModal from "./StudentModal";
+import { BookOpen, Calendar, CircleDollarSign, Users } from "lucide-react";
 
 const Navigation = () => {
     return (
-        <div className="bg-primaryBlue flex flex-col h-3/5 px-3 items-center rounded-xl shadow-lg shadow-indigo-900">
-            <div className="my-10 p-2">
+        <div className="bg-primaryBlue flex flex-col h-3/5 p-4 justify-evenly rounded-xl shadow-lg shadow-indigo-900">
+            <div className="py-3">
                 <StudentModal/>
             </div>
-            <Link href="/">index</Link>
-            <Link href="/students">Users</Link>
+            <div className="flex flex-col justify-around h-3/5">
+                <div>
+                    <Link href="/">
+                        <div className="p-2 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
+                            <Calendar size={36} color="white"/>
+                        </div>
+                    </Link>
+                </div>
+                <div>
+                    <Link href="/students">
+                        <div className="p-2 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
+                            <Users size={36} color="white"/>
+                        </div>
+                    </Link>
+                </div>
+                <div>
+                    <Link href="/lessons">
+                        <div className="p-2 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
+                            <BookOpen size={36} color="white"/>
+                        </div>
+                    </Link>
+                </div>
+                <div>
+                    <Link href="/dashboard">
+                        <div className="p-2 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
+                            <CircleDollarSign size={36} color="white"/>
+                        </div>
+                    </Link>
+                </div>
+            </div>
         </div>
     )
 }
