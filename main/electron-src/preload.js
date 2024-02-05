@@ -9,7 +9,7 @@ electron_1.contextBridge.exposeInMainWorld("main", {
     receive: (channel, func) => {
         electron_1.ipcRenderer.on(channel, (_, ...args) => func(...args));
     },
-    stop: (channel, handler) => {
-        electron_1.ipcRenderer.removeListener(channel, handler);
+    stop: (channel) => {
+        electron_1.ipcRenderer.removeAllListeners(channel);
     }
 });

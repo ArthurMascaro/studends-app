@@ -70,6 +70,7 @@ ipcMain.on("find-user-by-id", (event, cpf) => {
 });
 
 ipcMain.on("find-all-users", (event) => {
+	console.log("ueopa")
     userDAO.findAll(event).catch(error => console.error(error));
 });
 
@@ -190,8 +191,10 @@ ipcMain.on("find-all-lectures", (event) => {
 	lectureDAO.findAll(event).catch(error => console.error(error));
 });
 
-ipcMain.on("find-lecture-by-this-week", (event) => {
+ipcMain.on("find-lectures-by-week", (event) => {
+	console.log("eai")
 	lectureDAO.findLecturesByWeek(event).catch(error => console.error(error));
+	console.log("aefwewc")
 });
 
 ipcMain.on("find-all-lectures-sorted-by-date", (event, skip, take) => {

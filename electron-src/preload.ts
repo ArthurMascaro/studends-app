@@ -1,5 +1,4 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { IpcRendererEvent } from "electron/main";
 
 contextBridge.exposeInMainWorld("main", {
 	send: (channel: string, data: Object) => {
@@ -11,7 +10,7 @@ contextBridge.exposeInMainWorld("main", {
 		ipcRenderer.on(channel, (_, ...args) => func(...args));
 	},
 
-	stop: (channel: string, handler: (event: IpcRendererEvent, ...args: any[]) => void) => {
-		ipcRenderer.removeListener(channel, handler);
+	stop: (channel: string) => {
+		ipcRenderer.removeAllListeners(channel);
 	}
 })

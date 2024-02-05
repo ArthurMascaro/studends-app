@@ -58,6 +58,7 @@ electron_1.ipcMain.on("find-user-by-id", (event, cpf) => {
     userDAO.findById(event, cpf).catch(error => console.error(error));
 });
 electron_1.ipcMain.on("find-all-users", (event) => {
+    console.log("ueopa");
     userDAO.findAll(event).catch(error => console.error(error));
 });
 electron_1.ipcMain.on("find-user-by-name", (event, name) => {
@@ -144,8 +145,10 @@ electron_1.ipcMain.on("find-lecture-by-id", (event, id) => {
 electron_1.ipcMain.on("find-all-lectures", (event) => {
     lectureDAO.findAll(event).catch(error => console.error(error));
 });
-electron_1.ipcMain.on("find-lecture-by-this-week", (event) => {
+electron_1.ipcMain.on("find-lectures-by-week", (event) => {
+    console.log("eai");
     lectureDAO.findLecturesByWeek(event).catch(error => console.error(error));
+    console.log("aefwewc");
 });
 electron_1.ipcMain.on("find-all-lectures-sorted-by-date", (event, skip, take) => {
     lectureDAO.findAllLecturesSortedByDate(event, skip, take).catch(error => console.error(error));

@@ -5,14 +5,6 @@ import { toast } from "react-hot-toast";
 import { CreateUserFormData, GradeTypeEnum, GradeYearEnum } from "../intefaces";
 import { useState } from "react";
 
-const ModalTriggerButton = () => {
-    return (
-        <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-slate-700">
-            <Plus color="white" size={36}/>
-        </div>
-    )
-}
-
 const Field = ({ name, label, register, rules, error, ...args }) => {
     return (
         <div className="flex flex-col px-5 my-3">
@@ -23,16 +15,21 @@ const Field = ({ name, label, register, rules, error, ...args }) => {
     )
 }
 
+const StudentCard = () => {
+    
+}
+
 const StudentModal = () => {
 
     const [open, setOpen] = useState(false);
 
     const handleSuccess = () => { 
         toast.success("Aluno cadastrado!");
+        setOpen(false)
         reset();
     };
 
-    const handleError = () => toast.error("Aluno cadastrado!");
+    const handleError = () => toast.error("Houve um erro! Verifique os dados");
 
     const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<CreateUserFormData>();
 
@@ -52,10 +49,10 @@ const StudentModal = () => {
         window.main.send("create-user", payload);
 
         window.main.receive("create-user-success", handleSuccess);
-        window.main.stop("create-user-success", handleSuccess);
+        window.main.stop("create-user-success");
 
         window.main.receive("create-user-error", handleError);
-        window.main.stop("create-user-error", handleError);
+        window.main.stop("create-user-error");
     }
    
     let years = [];
@@ -115,7 +112,9 @@ const StudentModal = () => {
                 </div>
             </Modal>
             <div onClick={() => setOpen(!open)}>
-                <ModalTriggerButton/>
+                <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-slate-700">
+                    <Plus color="white" size={36}/>
+                </div>
             </div>
         </div>
     )

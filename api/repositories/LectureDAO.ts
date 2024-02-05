@@ -11,9 +11,9 @@ class LectureDAO {
   async create(event: any, data: ICreateLecture) {
     try {
       const result = await this.prisma.lecture.create({ data });
-      event.reply("create-lecture-success", result);
+      return event.reply("create-lecture-success", result);
     } catch (error: any) {
-      event.reply("create-lecture-error", error.message);
+      return event.reply("create-lecture-error", error.message);
     }
   }
 
@@ -22,18 +22,18 @@ class LectureDAO {
       const result: ILecture | null = await this.prisma.lecture.findUnique({
         where: { id },
       });
-      event.reply("find-lecture-by-id-success", result);
+      return event.reply("find-lecture-by-id-success", result);
     } catch (error: any) {
-      event.reply("find-lecture-by-id-error", error.message);
+      return event.reply("find-lecture-by-id-error", error.message);
     }
   }
 
   async findAll(event: any) {
     try {
       const result: ILecture[] = await this.prisma.lecture.findMany();
-      event.reply("find-all-lectures-success", result);
+      return event.reply("find-all-lectures-success", result);
     } catch (error: any) {
-      event.reply("find-all-lectures-error", error.message);
+      return event.reply("find-all-lectures-error", error.message);
     }
   }
 
@@ -43,9 +43,9 @@ class LectureDAO {
         where: { id },
         data: newData,
       });
-      event.reply("update-lecture-success", result);
+      return event.reply("update-lecture-success", result);
     } catch (error: any) {
-      event.reply("update-lecture-error", error.message);
+      return event.reply("update-lecture-error", error.message);
     }
   }
 
@@ -54,9 +54,9 @@ class LectureDAO {
       const result: ILecture = await this.prisma.lecture.delete({
         where: { id },
       });
-      event.reply("delete-lecture-success", result);
+      return event.reply("delete-lecture-success", result);
     } catch (error: any) {
-      event.reply("delete-lecture-error", error.message);
+      return event.reply("delete-lecture-error", error.message);
     }
   }
 
@@ -89,10 +89,10 @@ class LectureDAO {
         });
         lecturesByDay[currentDate.toISOString().split("T")[0]] = lectures;
       }
-
-      event.reply("find-lectures-by-week-success", lecturesByDay);
+      console.log(lecturesByDay)
+      return event.reply("find-lectures-by-week-success", lecturesByDay);
     } catch (error: any) {
-      event.reply("find-lectures-by-week-error", error.message);
+      return event.reply("find-lectures-by-week-error", error.message);
     }
   }
 
@@ -106,9 +106,9 @@ class LectureDAO {
         take,
       });
 
-      event.reply("find-all-lectures-sorted-by-date-success", lectures);
+      return event.reply("find-all-lectures-sorted-by-date-success", lectures);
     } catch (error: any) {
-      event.reply("find-all-lectures-sorted-by-date-error", error.message);
+      return event.reply("find-all-lectures-sorted-by-date-error", error.message);
     }
   }
 
@@ -132,9 +132,9 @@ class LectureDAO {
         take,
       });
 
-      event.reply("find-all-lectures-by-student-cpf-success", lectures);
+      return event.reply("find-all-lectures-by-student-cpf-success", lectures);
     } catch (error: any) {
-      event.reply("find-all-lectures-by-student-cpf-error", error.message);
+      return event.reply("find-all-lectures-by-student-cpf-error", error.message);
     }
   }
 
@@ -154,9 +154,9 @@ class LectureDAO {
           lesson: true,
         },
       });
-      event.reply("find-lectures-by-month-success", lectures);
+      return event.reply("find-lectures-by-month-success", lectures);
     } catch (error: any) {
-      event.reply("find-lectures-by-month-error", error.message);
+      return event.reply("find-lectures-by-month-error", error.message);
     }
   }
 
@@ -179,9 +179,9 @@ class LectureDAO {
         },
         include: { lesson: true },
       });
-      event.reply("find-all-lectures-by-student-and-month-success", lectures);
+      return event.reply("find-all-lectures-by-student-and-month-success", lectures);
     } catch (error: any) {
-      event.reply(
+      return event.reply(
         "find-all-lectures-by-student-and-month-error",
         error.message
       );
@@ -202,9 +202,9 @@ class LectureDAO {
                 AND EXTRACT(YEAR FROM ls.start_at) = ${year};
         `;
 
-        event.reply("get-total-profit-by-month-success", profitByMonth[0].total_profit);
+        return event.reply("get-total-profit-by-month-success", profitByMonth[0].total_profit);
     } catch (error: any) {
-        event.reply("get-total-profit-by-month-error", error.message);
+        return event.reply("get-total-profit-by-month-error", error.message);
     }
 }
 }

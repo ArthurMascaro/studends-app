@@ -1,8 +1,29 @@
+import { useState } from "react";
 import Content from "../components/Content"
 import Header from "../components/Header"
 import Layout from "../components/Layout"
-import LessonModal from "../components/LessonModal";
-const Lessons = () => {
+import Modal from "../components/Modal";
+
+const AddLessonModal = () => {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <div>
+            <Modal title="Agendar aula" isOpen={open} closeModal={() => setOpen(false)}>
+                <h1>Cadastro de aulas!</h1>
+            </Modal>
+            <div onClick={() => setOpen(!open)}>
+                <div style={{ userSelect: "none" }}>
+                    <div className="py-3 px-5 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
+                        <h1 className="text-xl font-bold text-white">Agendar nova aula</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default function Lessons () {
     return (
         <Layout>
             <Header>
@@ -11,7 +32,7 @@ const Lessons = () => {
             <Content>
                 <div className="flex h-full flex-col items-center justify-center">
                     <div className="m-2">
-                       <LessonModal/>
+                       <AddLessonModal/>
                     </div>
                     <div className="my-5 w-5/6 h-1 bg-darkBlue"></div>
                     <div className="flex flex-col w-11/12 overflow-y-auto">
@@ -26,5 +47,3 @@ const Lessons = () => {
         </Layout>
     )
 }
-
-export default Lessons;
