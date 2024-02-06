@@ -97,6 +97,9 @@ electron_1.ipcMain.on("get-total-debt-by-student", (event, cpf) => {
 electron_1.ipcMain.on("get-total-debt-by-student-and-month", (event, cpf, month, year) => {
     userDAO.getDebtByStudentAndMonth(event, cpf, month, year).catch(error => console.error(error));
 });
+electron_1.ipcMain.on("find-all-students-with-phones-and-debt", (event) => {
+    userDAO.findAllStudentsWithPhonesAndDebt(event).catch(error => console.error(error));
+});
 // Manipuladores de eventos para operações de telefone
 electron_1.ipcMain.on("create-phone", (event, data) => {
     userDAO.createPhone(event, data).catch(error => console.error(error));

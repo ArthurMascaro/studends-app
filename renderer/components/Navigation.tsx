@@ -10,12 +10,12 @@ export default function Navigation () {
     return (
         <div className="bg-primaryBlue flex flex-col h-3/5 p-4 justify-evenly rounded-xl shadow-lg shadow-indigo-900">
             <div className="py-3">
-                <div onClick={() => setOpen(!open)}>
+                <div onClick={() => { console.log("abri");setOpen(!open)}}>
                     <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-slate-700">
                         <Plus color="white" size={36}/>
                     </div>
                 </div>
-                <StudentModal isOpen={open} closeModal={() => setOpen(false)} student={undefined}/>
+                <StudentModal isOpen={open} closeModal={() => setOpen(false)} data={undefined}/>
             </div>
             <div className="flex flex-col justify-around h-3/5">
                 <div>

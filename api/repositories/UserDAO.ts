@@ -411,9 +411,9 @@ class UserDAO {
             });
         }
 
-        event.reply("find-all-students-with-phones-and-debt-success", studentsWithPhonesAndDebt);
+        return event.reply("find-all-students-with-phones-and-debt-success", studentsWithPhonesAndDebt);
     } catch (error: any) {
-        event.reply("find-all-students-with-phones-and-debt-error", error.message);
+        return event.reply("find-all-students-with-phones-and-debt-error", error.message);
     }
 }
 }

@@ -25,18 +25,20 @@ const FindUsers = () => {
     )
 }
 
-const StudentCard = ({ student }) => {
+const StudentCard = ({ data }) => {
+
+    const { student, phones, debtAmount } = data;
 
     const age = `${DateService.getAge(student.bornDate)} anos`;
 
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
 
     return (
         <div>
             <div className="bg-white w-4/5 h-5/6 flex rounded-md shadow-md shadow-slate-400 my-4" onClick={() => setOpen(!open)}>
-                <div className={`${student.owing !== 0 ? "bg-lightRed" : "bg-primaryBlue"} h-full w-1/12 flex items-center justify-center p-2 rounded-bl-md rounded-tl-md`}>
+                <div className={`${debtAmount !== 0 ? "bg-lightRed" : "bg-primaryBlue"} h-full w-1/12 flex items-center justify-center p-2 rounded-bl-md rounded-tl-md`}>
                     {
-                        student.owing !== 0 ?
+                        debtAmount !== 0 ?
                             <AlertTriangle color="white" size={34}/>
                         :
                             <Check color="white" size={34}/>
@@ -56,11 +58,11 @@ const StudentCard = ({ student }) => {
                         </div>
                     </div>
                     <div className="px-2 py-3">
-                        
+                        <h2>Telefone(s): {phones.join(" - ")}</h2>
                     </div>
                 </div>
             </div>
-            <StudentModal isOpen={open} closeModal={() => setOpen(false)} student={student}/>
+            <StudentModal isOpen={open} closeModal={() => setOpen(false)} data={data}/>
         </div>
     )
 }
@@ -71,22 +73,23 @@ export default function Students () {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        window.main.send("find-all-users");
+        window.main.send("find-all-students-with-phones-and-debt");
 
-		window.main.receive("find-all-users-success", (event, data) => {
+		window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
+            console.log(event)
             setStudents(event);
-            console.log(students)
+            console.log(students.length)
             setLoading(false);
         });
 
-		window.main.receive("find-all-users-error", (event, error) => {
+		window.main.receive("find-all-students-with-phones-and-debt-error", (event) => {
             setStudents({});
             setLoading(false);
         });
 
 		return () => {
-			window.main.stop("find-all-users-success");
-			window.main.stop("find-all-users-error");
+			window.main.stop("find-all-students-with-phones-and-debt-success");
+			window.main.stop("find-all-students-with-phones-and-debt-error");
 		}
     }, [])
     
@@ -113,11 +116,15 @@ export default function Students () {
                         :
                             <div className="flex flex-col w-11/12 overflow-y-auto">
                                 {
-                                    students.map((student, index) => {
-                                        return (
-                                            <StudentCard student={student} key={index}/>
-                                        )
-                                    })
+                                    students.length === 0 ?
+                                        <h2>Nenhum aluno encontrado</h2>
+                                    :
+                                        
+                                        students.map((student, index) => {
+                                            return (
+                                                <StudentCard data={student} key={index}/>
+                                            )
+                                        })
                                 }
                             </div>
                     }

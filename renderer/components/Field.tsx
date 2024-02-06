@@ -12,7 +12,7 @@ export default function Field ({ name, control, rules, label, error, ...args }) 
                         <h3>{label}</h3>
                         <input {...args} {...field} className="w-full p-2"/>
                         <div>
-                            {error && <span>{error.message}</span>}
+                            {error && <span>preencha corretamente o campo</span>}
                         </div>
                     </div>
                 )
