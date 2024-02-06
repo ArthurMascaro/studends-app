@@ -32,6 +32,10 @@ class DateService {
         const age = dayjs().startOf("day").diff(bornDate, "years")
         return age;
     }
+
+    static toInputDate (date) {
+        return dayjs(date).format("YYYY-MM-DD");
+    }
 }
 
 export default DateService;

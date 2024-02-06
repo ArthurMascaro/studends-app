@@ -21,8 +21,8 @@ export interface User {
     phone1: string,
     phone2: string | any,
     bornDate: string,
-    gradeYear: GradeYearEnum,
-    gradeType: GradeTypeEnum,
+    gradeYear: string,
+    gradeType: string,
     cpf: string,
     observation: string
 }
