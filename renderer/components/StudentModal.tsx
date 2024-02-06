@@ -4,68 +4,9 @@ import { useForm, Controller } from "react-hook-form";
 import { User } from "../intefaces";
 import { userValidator } from "../../utils/validation"
 import DateService from "../../utils/DateService";
-
-const Field = ({ name, control, label, error, ...args }) => {
-    return (
-        <Controller
-            rules={userValidator[name] ? userValidator[name] : {}}
-            name={name}
-            control={control}
-            render={({ field }) => {
-                return (
-                    <div className="w-full p-2">
-                        <h3>{label}</h3>
-                        <input {...args} {...field} className="w-full p-2"/>
-                        <div>
-                            {error && <span>{error.message}</span>}
-                        </div>
-                    </div>
-                )
-            }}
-        />
-    )
-}
-
-const Select = ({ name, control, options, ...args }) => {
-    return (
-        <Controller
-            rules={{ required: true }}
-            name={name}
-            control={control}
-            render={({ field }) => {
-                return (
-                    <select {...field} {...args}>
-                        {
-                            options.map((option, index) => {
-                                return (
-                                    <option key={index} value={option.value}>{option.text}</option>
-                                )
-                            })
-                        }
-                    </select>
-                )
-            }}
-        />
-    )
-}
-
-const TextArea = ({ name, control, label, ...args }) => {
-    return (
-        <Controller
-            rules={{ required: false }}
-            name={name}
-            control={control}
-            render={({ field }) => {
-                return (
-                    <div className="w-full p-2">
-                        <h3>{label}</h3>
-                        <textarea {...args} {...field} className="w-full p-2" />
-                    </div>
-                )
-            }}
-        />
-    )
-}
+import Field from "./Field";
+import Select from "./Select";
+import TextArea from "./TextArea";
 
 export default function StudentModal ({ isOpen, closeModal, student }) {
 
@@ -102,14 +43,14 @@ export default function StudentModal ({ isOpen, closeModal, student }) {
             <Modal isOpen={isOpen} closeModal={closeModal} title={student ? "Dados do aluno" : "Cadastrar aluno"}>
                 <div>
                     <form className="overflow-auto h-96 p-4">
-                        <Field name="name" control={control} label="Nome" error={ errors.name }/>
-                        <Field name="motherName" control={control} label="Nome da mãe" error={ errors.motherName }/>
+                        <Field name="name" control={control} rules={null} label="Nome" error={ errors.name }/>
+                        <Field name="motherName" control={control} rules={null} label="Nome da mãe" error={ errors.motherName }/>
                         <div className="flex gap-4">
-                            <Field name="phone1" control={control} label="Telefone" error={ errors.phone1 } type="tel" placeholder="(00)0000-0000"/>
-                            <Field name="phone2" control={control} label="Telefone" error={ errors.phone2 } type="tel" placeholder="(00)0000-0000"/>
+                            <Field name="phone1" control={control} rules={null} label="Telefone" error={ errors.phone1 } type="tel" placeholder="(00)0000-0000"/>
+                            <Field name="phone2" control={control} rules={null} label="Telefone" error={ errors.phone2 } type="tel" placeholder="(00)0000-0000"/>
                         </div>
-                        <Field name="bornDate" control={control} label="Data de nascimento" error={ errors.bornDate } type="date"/>
-                        <Field name="cpf" control={control} label="CPF" error={ errors.cpf } placeholder="XXX.XXX.XXX-XX" readOnly={student ? true : false}/>
+                        <Field name="bornDate" control={control} rules={null} label="Data de nascimento" error={ errors.bornDate } type="date"/>
+                        <Field name="cpf" control={control} rules={null} label="CPF" error={ errors.cpf } placeholder="XXX.XXX.XXX-XX" readOnly={student ? true : false}/>
                         <div className="w-full p-2">
                             <h3>Série</h3>
                             <div className="flex">
