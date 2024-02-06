@@ -3,6 +3,7 @@ import Content from "../components/Content"
 import Header from "../components/Header"
 import Layout from "../components/Layout"
 import Modal from "../components/Modal";
+import LessonModal from "../components/LessonModal";
 
 const AddLessonModal = () => {
     const [open, setOpen] = useState(false);
@@ -24,6 +25,8 @@ const AddLessonModal = () => {
 }
 
 export default function Lessons () {
+    const [open, setOpen] = useState(false);
+
     return (
         <Layout>
             <Header>
@@ -32,7 +35,14 @@ export default function Lessons () {
             <Content>
                 <div className="flex h-full flex-col items-center justify-center">
                     <div className="m-2">
-                       <AddLessonModal/>
+                        <div onClick={() => setOpen(!open)}>
+                            <div style={{ userSelect: "none" }}>
+                                <div className="py-3 px-5 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
+                                    <h1 className="text-xl font-bold text-white">Agendar nova aula</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <LessonModal isOpen={open} closeModal={() => setOpen(false)} lesson={undefined}/>
                     </div>
                     <div className="my-5 w-5/6 h-1 bg-darkBlue"></div>
                     <div className="flex flex-col w-11/12 overflow-y-auto">

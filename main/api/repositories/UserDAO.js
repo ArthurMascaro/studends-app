@@ -343,5 +343,38 @@ class UserDAO {
             return event.reply("get-debt-by-student-and-month-error", error.message);
         }
     }
+    async findAllStudentsWithPhonesAndDebt(event) {
+        try {
+            const students = await this.prisma.user.findMany();
+            const studentsWithPhonesAndDebt = [];
+            for (const student of students) {
+                const phones = await this.prisma.phone.findMany({
+                    where: { user_cpf: student.cpf },
+                });
+                const unpaidLectures = await this.prisma.lecture.findMany({
+                    where: { user_cpf: student.cpf, payed: false },
+                    include: { lesson: true },
+                });
+                let debtAmount = 0;
+                for (const lecture of unpaidLectures) {
+                    const lesson = await this.prisma.lesson.findUnique({
+                        where: { id: lecture.lesson_id },
+                    });
+                    if (lesson) {
+                        debtAmount += lesson.value;
+                    }
+                }
+                studentsWithPhonesAndDebt.push({
+                    student,
+                    phones,
+                    debtAmount,
+                });
+            }
+            return event.reply("find-all-students-with-phones-and-debt-success", studentsWithPhonesAndDebt);
+        }
+        catch (error) {
+            return event.reply("find-all-students-with-phones-and-debt-error", error.message);
+        }
+    }
 }
 exports.default = UserDAO;
