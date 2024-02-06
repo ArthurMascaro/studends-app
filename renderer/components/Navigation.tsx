@@ -1,13 +1,15 @@
 import Link from "next/link";
-import StudentModal from "./AddStudentModal";
 import { BookOpen, Calendar, CircleDollarSign, Users } from "lucide-react";
 
-const Navigation = () => {
+const StudentModal = () => {
 
+}
+
+export default function Navigation () {
     return (
         <div className="bg-primaryBlue flex flex-col h-3/5 p-4 justify-evenly rounded-xl shadow-lg shadow-indigo-900">
             <div className="py-3">
-                <StudentModal/>
+                <h1>Modal</h1>
             </div>
             <div className="flex flex-col justify-around h-3/5">
                 <div>
@@ -42,5 +44,3 @@ const Navigation = () => {
         </div>
     )
 }
-
-export default Navigation;

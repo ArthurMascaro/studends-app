@@ -1,6 +1,6 @@
 import Navigation from "./Navigation"
 
-const Layout = ({ children }) => {
+export default function Layout ({ children }) {
     return (
         <div className="w-screen h-screen flex flex-row justify-around items-center p-3">
             <Navigation/>
@@ -10,5 +10,3 @@ const Layout = ({ children }) => {
         </div>
     )
 }
-
-export default Layout;

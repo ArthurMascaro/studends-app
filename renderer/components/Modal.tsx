@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-const Modal = ({ children, isOpen, closeModal, title }) => {
+export default function Modal ({ children, isOpen, closeModal, title }) {
 
     if (!isOpen) {
         return <></>
@@ -26,5 +26,3 @@ const Modal = ({ children, isOpen, closeModal, title }) => {
         </div>
     )
 }
-
-export default Modal;
