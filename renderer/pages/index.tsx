@@ -2,16 +2,16 @@ import Content from "../components/Content";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
 
-import DataService from "../../utils/DateService";
+import DateService from "../../utils/DateService";
 import { useEffect, useState } from "react";
 
 export default function Index () {
 
 	const [loading, setLoading] = useState(true);
-	let weekData = null;
+	const [weekData, setWeekdata] = useState({});
 
-	const week = DataService.getFullWeek();
-	const today = DataService.today();
+	const week = DateService.getFullWeek();
+	const today = DateService.today();
 
 	const [activeDay, setActiveDay] = useState(week[today.day()].date);
 
@@ -20,24 +20,21 @@ export default function Index () {
 		setActiveDay(week[date.day()].date);
 	}
 
-	const handleFetchSuccess = (event) => {
-		console.log(event)
-		weekData = event;
-		console.log(weekData)
-		setLoading(false);
-	} 
-
-	const handleFetchError = (event) => {
-		weekData = null;
-		setLoading(false);
-	}
+	
+	
 
 	useEffect(() => {
 		window.main.send("find-lectures-by-week");
 
-		window.main.receive("find-lectures-by-week-success", handleFetchSuccess);
+		window.main.receive("find-lectures-by-week-success", (event, data) => {
+			setWeekdata(event);
+			setLoading(false);
+		});
 
-		window.main.receive("find-lectures-by-week-success", handleFetchError);
+		window.main.receive("find-lectures-by-week-error", (event, data) => {
+			setWeekdata({});
+			setLoading(false);
+		});
 
 		return () => {
 			window.main.stop("find-lectures-by-week-success");

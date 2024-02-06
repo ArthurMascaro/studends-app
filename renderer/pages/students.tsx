@@ -3,6 +3,7 @@ import Content from "../components/Content";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
+import DateService from "../../utils/DateService";
 
 const FindUsers = () => {
     return (
@@ -25,8 +26,7 @@ const FindUsers = () => {
 
 const StudentCard = ({ student }) => {
 
-    console.log(student)
-    const age = "16 anos";
+    const age = `${DateService.getAge(student.bornDate)} anos`;
 
     return (
         <div className="bg-white w-4/5 flex rounded-md shadow-md shadow-slate-400 my-4">
@@ -44,7 +44,7 @@ const StudentCard = ({ student }) => {
                         <User size={32} color="#593FD8"/>
                         <div>
                             <h1 className="font-bold text-2xl text-darkBlue">{student.name}</h1>
-                            <h2 className="font-bold text-lg text-darkBlue">Responsável: {student.mother}</h2>
+                            <h2 className="font-bold text-lg text-darkBlue">Responsável: {student.motherName}</h2>
                         </div>
                     </div>
                     <div className="p-1 mx-5 bg-darkBlue flex w-4/12 justify-center rounded-sm">
@@ -52,7 +52,7 @@ const StudentCard = ({ student }) => {
                     </div>
                 </div>
                 <div className="px-2 py-3">
-                    <h2 className="text-lg font-bold text-slate-700">Telefone(s): {student.phones.join(" e ")}</h2>
+                    
                 </div>
             </div>
         </div>
@@ -61,26 +61,22 @@ const StudentCard = ({ student }) => {
 
 export default function Students () {
 
-    let students = [];
+    const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const handleFetchSuccess = (event) => {
-        students = event;
-        console.log(students)
-        setLoading(false);
-    }
-
-    const handleFetchError = (event) => {
-        students = event;
-        setLoading(false);
-    }
 
     useEffect(() => {
         window.main.send("find-all-users");
 
-		window.main.receive("find-all-users-success", handleFetchSuccess);
+		window.main.receive("find-all-users-success", (event, data) => {
+            setStudents(event);
+            console.log(students)
+            setLoading(false);
+        });
 
-		window.main.receive("find-all-users-success", handleFetchError);
+		window.main.receive("find-all-users-error", (event, error) => {
+            setStudents({});
+            setLoading(false);
+        });
 
 		return () => {
 			window.main.stop("find-all-users-success");

@@ -1,7 +1,7 @@
 import { Dayjs } from "dayjs";
 import dayjs from "./dayjs.config";
 
-class DataService {
+class DateService {
 
     static days = "dom-seg-ter-qua-qui-sex-sab".split("-");
 
@@ -27,6 +27,11 @@ class DataService {
     static today () {
         return dayjs().startOf("day");
     }
+
+    static getAge (bornDate) {
+        const age = dayjs().startOf("day").diff(bornDate, "years")
+        return age;
+    }
 }
 
-export default DataService;
+export default DateService;

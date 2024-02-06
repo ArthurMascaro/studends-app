@@ -23,14 +23,6 @@ const StudentModal = () => {
 
     const [open, setOpen] = useState(false);
 
-    const handleSuccess = () => { 
-        toast.success("Aluno cadastrado!");
-        setOpen(false)
-        reset();
-    };
-
-    const handleError = () => toast.error("Houve um erro! Verifique os dados");
-
     const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<CreateUserFormData>();
 
     const onSubmit = (data: CreateUserFormData) => {
@@ -48,10 +40,17 @@ const StudentModal = () => {
         }    
         window.main.send("create-user", payload);
 
-        window.main.receive("create-user-success", handleSuccess);
-        window.main.stop("create-user-success");
+        window.main.receive("create-user-success", (event) => {
+            console.log(event);
+            console.log("ssjnscwcecevev")
+            toast.success("Aluno cadastrado")
+        });
+        
+        window.main.receive("create-user-error", (event) => {
+            toast.error("Algo deu errado. Verifique os dados");
+        });
 
-        window.main.receive("create-user-error", handleError);
+        window.main.stop("create-user-success");
         window.main.stop("create-user-error");
     }
    
