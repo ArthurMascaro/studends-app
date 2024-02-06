@@ -65,3 +65,8 @@ export interface ILecture {
     presence: boolean;
 }
 
+export interface IStudentWithPhonesAndDebt {
+    student: IStudent;
+    phones: IPhone[];
+    debtAmount: number;
+}
