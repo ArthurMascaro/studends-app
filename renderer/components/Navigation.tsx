@@ -1,15 +1,21 @@
 import Link from "next/link";
-import { BookOpen, Calendar, CircleDollarSign, Users } from "lucide-react";
-
-const StudentModal = () => {
-
-}
+import { BookOpen, Calendar, CircleDollarSign, Plus, Users } from "lucide-react";
+import { useState } from "react";
+import StudentModal from "./StudentModal";
 
 export default function Navigation () {
+
+    const [open, setOpen] = useState(false);
+
     return (
         <div className="bg-primaryBlue flex flex-col h-3/5 p-4 justify-evenly rounded-xl shadow-lg shadow-indigo-900">
             <div className="py-3">
-                <h1>Modal</h1>
+                <div onClick={() => setOpen(!open)}>
+                    <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-slate-700">
+                        <Plus color="white" size={36}/>
+                    </div>
+                </div>
+                <StudentModal isOpen={open} closeModal={() => setOpen(false)} student={undefined}/>
             </div>
             <div className="flex flex-col justify-around h-3/5">
                 <div>

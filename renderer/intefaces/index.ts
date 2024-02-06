@@ -15,19 +15,7 @@ export enum GradeTypeEnum {
     EF = "E.F."
 }
 
-export interface CreateUserFormData {
-    name: string,
-    motherName: string,
-    phone1: string,
-    phone2: string | any,
-    bornDate: string,
-    gradeYear: GradeYearEnum,
-    gradeType: GradeTypeEnum,
-    cpf: string,
-    observation: string
-}
-export interface UpdateUserFormData {
-    id: string,
+export interface User {
     name: string,
     motherName: string,
     phone1: string,

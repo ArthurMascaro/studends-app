@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import Modal from "./Modal";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { CreateUserFormData, GradeTypeEnum, GradeYearEnum } from "../intefaces";
+import { User, GradeTypeEnum, GradeYearEnum } from "../intefaces";
 import { useState } from "react";
 
 const Field = ({ name, label, register, rules, error, ...args }) => {
@@ -15,17 +15,14 @@ const Field = ({ name, label, register, rules, error, ...args }) => {
     )
 }
 
-const StudentCard = () => {
-    
-}
 
-const StudentModal = () => {
+export default function StudentModal () {
 
     const [open, setOpen] = useState(false);
 
-    const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<CreateUserFormData>();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<User>();
 
-    const onSubmit = (data: CreateUserFormData) => {
+    const onSubmit = (data: User) => {
         const { name, motherName, phone1, phone2, bornDate, gradeYear, gradeType, cpf, observation } = data;
 
         const formattedBornDate = new Date(bornDate).toISOString();
@@ -118,5 +115,3 @@ const StudentModal = () => {
         </div>
     )
 }
-
-export default StudentModal;
