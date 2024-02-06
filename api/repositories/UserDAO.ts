@@ -5,6 +5,7 @@ import {
   IPhone,
   IStudent,
   ILecture,
+  IStudentWithPhonesAndDebt
 } from "../domain/interfaces";
 
 class UserDAO {
@@ -375,6 +376,46 @@ class UserDAO {
       return event.reply("get-debt-by-student-and-month-error", error.message);
     }
   }
+
+  async findAllStudentsWithPhonesAndDebt(event: any) {
+    try {
+        const students: IStudent[] = await this.prisma.user.findMany();
+        const studentsWithPhonesAndDebt: IStudentWithPhonesAndDebt[] = [];
+
+        for (const student of students) {
+            const phones: IPhone[] = await this.prisma.phone.findMany({
+                where: { user_cpf: student.cpf },
+            });
+
+            const unpaidLectures: ILecture[] = await this.prisma.lecture.findMany({
+                where: { user_cpf: student.cpf, payed: false },
+                include: { lesson: true },
+            });
+
+            let debtAmount: number = 0;
+
+            for (const lecture of unpaidLectures) {
+                const lesson = await this.prisma.lesson.findUnique({
+                    where: { id: lecture.lesson_id },
+                });
+
+                if (lesson) {
+                    debtAmount += lesson.value;
+                }
+            }
+
+            studentsWithPhonesAndDebt.push({
+                student,
+                phones,
+                debtAmount,
+            });
+        }
+
+        event.reply("find-all-students-with-phones-and-debt-success", studentsWithPhonesAndDebt);
+    } catch (error: any) {
+        event.reply("find-all-students-with-phones-and-debt-error", error.message);
+    }
+}
 }
 
 export default UserDAO;
