@@ -38,6 +38,7 @@ class UserDAO {
     }
     async update(event, cpf, newData) {
         try {
+            console.log(newData);
             const result = await this.prisma.user.update({
                 where: { cpf },
                 data: newData,

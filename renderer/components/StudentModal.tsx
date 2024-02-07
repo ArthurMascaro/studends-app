@@ -49,6 +49,15 @@ export default function StudentModal ({ isOpen, closeModal, data }) {
         defaultValues = { name, motherName, bornDate, cpf, observation, gradeYear, gradeType, phone1: newPhones[0] , phone2: newPhones[1] }
     }
 
+    const loadData = () => {
+        window.main.send("find-all-students-with-phones-and-debt");
+
+        window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
+            setStudents(event);
+            window.main.stop("find-all-students-with-phones-and-debt-success");
+        });
+    }
+
     const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<User>({ defaultValues })
 
     const onSubmit = (newStudent) => {
@@ -71,14 +80,30 @@ export default function StudentModal ({ isOpen, closeModal, data }) {
         }
         
         if (data) {
-            window.main.send("update-student", cpf, studentPayload);
+            console.log(studentPayload)
+            window.main.send("update-user", cpf, studentPayload);
             //window.main.send("update-phone")
+
+            window.main.receive("update-user-success", event => {
+                toast.success("Dados alterados");
+                loadData();
+                window.main.stop("update-user-success");
+                window.main.stop("update-user-error");
+                handleClose();
+            })
+
+            window.main.receive("update-user-error", event => {
+                toast.error("Houve um erro");
+                window.main.stop("update-user-error");
+                window.main.stop("update-user-success");
+            })
         } else {
             window.main.send("create-user", studentPayload);
             window.main.send("create-many-phones", phonesPayload);
 
             window.main.receive("create-user-success", (event) => {
                 toast.success("Aluno cadastrado");
+                loadData();
                 window.main.stop("create-user-success")
                 window.main.stop("create-user-error")
                 handleClose();
@@ -89,14 +114,6 @@ export default function StudentModal ({ isOpen, closeModal, data }) {
                 window.main.stop("create-user-error");
             })
         }
-
-        window.main.send("find-all-students-with-phones-and-debt");
-
-        window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
-            setStudents(event);
-            window.main.stop("find-all-students-with-phones-and-debt-success");
-        });
-    
     }
 
     const handleClose = () => {

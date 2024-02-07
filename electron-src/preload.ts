@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("main", {
-	send: (channel: string, data: Object) => {
-		console.log("send", channel, data)
-		ipcRenderer.send(channel, data);
+	send: (channel: string, ...args: any) => {
+		console.log("send", channel, ...args)
+		ipcRenderer.send(channel, ...args);
 	},
 
 	receive: (channel: string, func: Function) => {

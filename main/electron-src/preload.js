@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 electron_1.contextBridge.exposeInMainWorld("main", {
-    send: (channel, data) => {
-        console.log("send", channel, data);
-        electron_1.ipcRenderer.send(channel, data);
+    send: (channel, ...args) => {
+        console.log("send", channel, ...args);
+        electron_1.ipcRenderer.send(channel, ...args);
     },
     receive: (channel, func) => {
         console.log("receive", "sdvsfsdf");

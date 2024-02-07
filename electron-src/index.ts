@@ -58,6 +58,7 @@ ipcMain.on("create-user", (event, data) => {
 });
 
 ipcMain.on("update-user", (event, cpf, newData) => {
+	console.log(newData)
     userDAO.update(event, cpf, newData).catch(error => console.error(error));
 });
 

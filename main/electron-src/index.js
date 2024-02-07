@@ -49,6 +49,7 @@ electron_1.ipcMain.on("create-user", (event, data) => {
     userDAO.create(event, data).catch(error => console.error(error));
 });
 electron_1.ipcMain.on("update-user", (event, cpf, newData) => {
+    console.log(newData);
     userDAO.update(event, cpf, newData).catch(error => console.error(error));
 });
 electron_1.ipcMain.on("delete-user", (event, cpf) => {
