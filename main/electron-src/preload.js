@@ -7,6 +7,7 @@ electron_1.contextBridge.exposeInMainWorld("main", {
         electron_1.ipcRenderer.send(channel, data);
     },
     receive: (channel, func) => {
+        console.log("receive", "sdvsfsdf");
         electron_1.ipcRenderer.on(channel, (_, ...args) => func(...args));
     },
     stop: (channel) => {

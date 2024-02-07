@@ -1,31 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Content from "../components/Content"
 import Header from "../components/Header"
 import Layout from "../components/Layout"
-import Modal from "../components/Modal";
 import LessonModal from "../components/LessonModal";
-
-const AddLessonModal = () => {
-    const [open, setOpen] = useState(false);
-
-    return (
-        <div>
-            <Modal title="Agendar aula" isOpen={open} closeModal={() => setOpen(false)}>
-                <h1>Cadastro de aulas!</h1>
-            </Modal>
-            <div onClick={() => setOpen(!open)}>
-                <div style={{ userSelect: "none" }}>
-                    <div className="py-3 px-5 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
-                        <h1 className="text-xl font-bold text-white">Agendar nova aula</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
+import { useLessonsStore } from "../store";
 
 export default function Lessons () {
     const [open, setOpen] = useState(false);
+
+    const lessons = useLessonsStore((state: any) => state.lessons);
+    const setLessons = useLessonsStore((state: any) => state.setLessons);
+
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        window.main.send("");
+
+        window.main.receive.send("", (event) => {
+            setLessons(event);
+            setLoading(false);
+        })
+
+        window.main.receive.send("", (event) => {
+            setLessons([]);
+            setLoading(false);
+        })
+    })
 
     return (
         <Layout>
@@ -46,11 +46,12 @@ export default function Lessons () {
                     </div>
                     <div className="my-5 w-5/6 h-1 bg-darkBlue"></div>
                     <div className="flex flex-col w-11/12 overflow-y-auto">
-                        <h1 className="p-5 m-10">Aluno xxx</h1>
-                        <h1 className="p-5 m-10">Aluno xxx</h1>
-                        <h1 className="p-5 m-10">Aluno xxx</h1>
-                        <h1 className="p-5 m-10">Aluno xxx</h1>
-                        <h1 className="p-5 m-10">Aluno xxx</h1>
+                        {
+                            loading ?
+                                <p>Carregando...</p>
+                            :
+                                <h1>Tarefas aqui</h1>
+                        }
                     </div>
 				</div>
             </Content>

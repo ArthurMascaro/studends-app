@@ -54,7 +54,6 @@ const lectureDAO = new LectureDAO();
 
 // Manipuladores de eventos para operações de usuário
 ipcMain.on("create-user", (event, data) => {
-	console.log(data)
     userDAO.create(event, data).catch(error => console.error(error));
 });
 

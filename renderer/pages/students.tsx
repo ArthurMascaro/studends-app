@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import DateService from "../../utils/DateService";
 import StudentModal from "../components/StudentModal";
+import { useStudentsStore } from "../store";
 
 const FindUsers = () => {
     return (
@@ -69,21 +70,21 @@ const StudentCard = ({ data }) => {
 
 export default function Students () {
 
-    const [students, setStudents] = useState([]);
+    const students = useStudentsStore((state: any) => state.students);
+    const setStudents = useStudentsStore((state: any) => state.setStudents);
+
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         window.main.send("find-all-students-with-phones-and-debt");
 
 		window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
-            console.log(event)
             setStudents(event);
-            console.log(students.length)
             setLoading(false);
         });
 
 		window.main.receive("find-all-students-with-phones-and-debt-error", (event) => {
-            setStudents({});
+            setStudents([]);
             setLoading(false);
         });
 

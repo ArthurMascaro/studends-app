@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld("main", {
 	},
 
 	receive: (channel: string, func: Function) => {
+		console.log("receive", "sdvsfsdf")
 		ipcRenderer.on(channel, (_, ...args) => func(...args));
 	},
 

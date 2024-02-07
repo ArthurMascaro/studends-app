@@ -8,8 +8,11 @@ import Field from "./Field";
 import Select from "./Select";
 import TextArea from "./TextArea";
 import { toast } from "react-hot-toast";
+import { useStudentsStore } from "../store";
 
 export default function StudentModal ({ isOpen, closeModal, data }) {
+
+    const setStudents = useStudentsStore((state: any) => state.setStudents);
 
     let years = [];
     for (let i = 1; i < 10; i++) {
@@ -62,26 +65,38 @@ export default function StudentModal ({ isOpen, closeModal, data }) {
         if (phone2 && phone2.length !== 0) {
             phonesPayload.push({ user_cpf: cpf, number: phone2 })
         }
+
+        if (!observation) {
+            observation = ""
+        }
         
         if (data) {
             window.main.send("update-student", cpf, studentPayload);
             //window.main.send("update-phone")
         } else {
-            console.log("aqui oh")
             window.main.send("create-user", studentPayload);
             window.main.send("create-many-phones", phonesPayload);
 
             window.main.receive("create-user-success", (event) => {
                 toast.success("Aluno cadastrado");
+                window.main.stop("create-user-success")
+                window.main.stop("create-user-error")
+                handleClose();
             })
             window.main.receive("create-user-error", (event) => {
-                toast.success("Houve um erro");
+                toast.error("Houve um erro");
+                window.main.stop("create-user-success");
+                window.main.stop("create-user-error");
             })
-
-            window.main.stop("create-user-success")
-            window.main.stop("create-user-error")
         }
-        
+
+        window.main.send("find-all-students-with-phones-and-debt");
+
+        window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
+            setStudents(event);
+            window.main.stop("find-all-students-with-phones-and-debt-success");
+        });
+    
     }
 
     const handleClose = () => {
