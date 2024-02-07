@@ -7,6 +7,7 @@ import DateService from "../../utils/DateService";
 import Field from "./Field";
 import Select from "./Select";
 import TextArea from "./TextArea";
+import { toast } from "react-hot-toast";
 
 export default function StudentModal ({ isOpen, closeModal, data }) {
 
@@ -24,21 +25,26 @@ export default function StudentModal ({ isOpen, closeModal, data }) {
 
     if (data) {
         const { student, phones, debtAmount } = data;
-        let { name, motherName, bornDate, observation, cpf, grade } = data.student;
+        let { name, motherName, bornDate, observation, cpf, grade } = student;
 
         let [gradeYear, gradeType] = grade.split(" Ano ");
+
         bornDate = DateService.toInputDate(bornDate);
 
         let newPhones = ["", ""];
         if (phones.length === 2) {
-            newPhones = phones;
+            newPhones[0] = phones[0].number;
+            newPhones[1] = phones[1].number;
         } else if (phones.length === 1) {
-            newPhones[0] = data.phones[0];
+            newPhones[0] = phones[0].number;
+        }
+
+        if (!observation) {
+            observation = "";
         }
         
         defaultValues = { name, motherName, bornDate, cpf, observation, gradeYear, gradeType, phone1: newPhones[0] , phone2: newPhones[1] }
     }
-
 
     const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<User>({ defaultValues })
 
@@ -52,15 +58,28 @@ export default function StudentModal ({ isOpen, closeModal, data }) {
 
         const studentPayload = { name, motherName, cpf, bornDate, grade, observation };
 
-        let phonesPayload = [{ user_cpf: cpf, phone: phone1 }];
-        if (phone2.length !== 0) {
-            phonesPayload.push({ user_cpf: cpf, phone: phone2 })
+        let phonesPayload = [{ user_cpf: cpf, number: phone1 }];
+        if (phone2 && phone2.length !== 0) {
+            phonesPayload.push({ user_cpf: cpf, number: phone2 })
         }
         
         if (data) {
-            
+            window.main.send("update-student", cpf, studentPayload);
+            //window.main.send("update-phone")
         } else {
-            
+            console.log("aqui oh")
+            window.main.send("create-user", studentPayload);
+            window.main.send("create-many-phones", phonesPayload);
+
+            window.main.receive("create-user-success", (event) => {
+                toast.success("Aluno cadastrado");
+            })
+            window.main.receive("create-user-error", (event) => {
+                toast.success("Houve um erro");
+            })
+
+            window.main.stop("create-user-success")
+            window.main.stop("create-user-error")
         }
         
     }

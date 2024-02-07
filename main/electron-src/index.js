@@ -117,6 +117,9 @@ electron_1.ipcMain.on("find-all-phones-by-user-cpf", (event, user_cpf) => {
 electron_1.ipcMain.on("create-lesson", (event, data) => {
     lessonDAO.create(event, data).catch(error => console.error(error));
 });
+electron_1.ipcMain.on("create-many-phones", (event, data) => {
+    userDAO.createManyPhones(event, data).catch(error => console.error(error));
+});
 electron_1.ipcMain.on("update-lesson", (event, id, newData) => {
     lessonDAO.update(event, id, newData).catch(error => console.error(error));
 });

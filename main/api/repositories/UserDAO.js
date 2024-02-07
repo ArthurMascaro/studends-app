@@ -68,6 +68,21 @@ class UserDAO {
             return event.reply("create-phone-error", error.message);
         }
     }
+    async createManyPhones(event, phoneDataList) {
+        try {
+            const createdPhones = [];
+            for (const phoneData of phoneDataList) {
+                const createdPhone = await this.prisma.phone.create({
+                    data: phoneData,
+                });
+                createdPhones.push(createdPhone);
+            }
+            return event.reply("create-many-phones-success", createdPhones);
+        }
+        catch (error) {
+            return event.reply("create-many-phones-error", error.message);
+        }
+    }
     async findAllPhonesByUserCpf(event, user_cpf) {
         try {
             const result = await this.prisma.phone.findMany({

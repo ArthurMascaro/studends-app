@@ -86,9 +86,9 @@ class UserDAO {
             });
             createdPhones.push(createdPhone);
         }
-        event.reply("create-many-phones-success", createdPhones);
+        return event.reply("create-many-phones-success", createdPhones);
     } catch (error: any) {
-        event.reply("create-many-phones-error", error.message);
+        return event.reply("create-many-phones-error", error.message);
     }
 }
 

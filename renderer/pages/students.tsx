@@ -58,7 +58,7 @@ const StudentCard = ({ data }) => {
                         </div>
                     </div>
                     <div className="px-2 py-3">
-                        <h2>Telefone(s): {phones.join(" - ")}</h2>
+                        <h2>Telefone(s): {phones[0] ? phones[0].number : ""} {phones[1] ? phones[1].number : ""}</h2>
                     </div>
                 </div>
             </div>
