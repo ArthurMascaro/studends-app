@@ -3,13 +3,35 @@ import Modal from "./Modal";
 import { Lesson } from "../intefaces";
 import Field from "./Field";
 import { useState } from "react";
+import { useStudentsStore } from "../store";
 
 const SearchUser = ({ setUser }) => {
+    const students = useStudentsStore((state: any) => state.students);
+    const [name, setName] = useState("");
+    const [filteredStudents, setFilteredStudents] = useState([]);
+
+    const [selected, setSelected] = useState(null);
+
+    const handleChangeName = (event) => {
+        setName(event.target.value);
+
+        const filtered = students.filter((data) => data.student.name.toLowerCase().includes(name.toLowerCase()));
+        setFilteredStudents(filtered);
+    }
+
     return (
         <div>
-            <input type="search" name="" id="" />
-            <div>
-
+            <input type="search" onChange={handleChangeName}/>
+            <div className="h-40 overflow-y-auto">
+                {
+                    filteredStudents.map((data, index) => {
+                        return (
+                            <div onClick={() => setSelected(data)}>
+                                <p>{data.student.name}</p>
+                            </div>
+                        )
+                    })
+                }
             </div>
         </div>
     )

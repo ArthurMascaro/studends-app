@@ -16,12 +16,12 @@ export default function Lessons () {
     useEffect(() => {
         window.main.send("");
 
-        window.main.receive.send("", (event) => {
+        window.main.receive("", (event) => {
             setLessons(event);
             setLoading(false);
         })
 
-        window.main.receive.send("", (event) => {
+        window.main.receive("", (event) => {
             setLessons([]);
             setLoading(false);
         })
@@ -50,7 +50,10 @@ export default function Lessons () {
                             loading ?
                                 <p>Carregando...</p>
                             :
-                                <h1>Tarefas aqui</h1>
+                                lessons.lenght === 0 ? 
+                                    <p>Nenhuma aula encontrada</p>
+                                :
+                                    <h1>Aulas!</h1>
                         }
                     </div>
 				</div>

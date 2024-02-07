@@ -385,7 +385,6 @@ class UserDAO {
                     debtAmount,
                 });
             }
-            console.log(studentsWithPhonesAndDebt);
             return event.reply("find-all-students-with-phones-and-debt-success", studentsWithPhonesAndDebt);
         }
         catch (error) {
