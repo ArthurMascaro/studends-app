@@ -34,6 +34,10 @@ const StudentCard = ({ data }) => {
 
     const [open, setOpen] = useState(false);
 
+    const handleClose = () => {
+        setOpen(false)
+    }
+
     return (
         <div>
             <div className="bg-white w-4/5 h-5/6 flex rounded-md shadow-md shadow-slate-400 my-4" onClick={() => setOpen(!open)}>
@@ -63,7 +67,11 @@ const StudentCard = ({ data }) => {
                     </div>
                 </div>
             </div>
-            <StudentModal isOpen={open} closeModal={() => setOpen(false)} data={data}/>
+            {
+                student ?
+                    <StudentModal isOpen={open} closeModal={handleClose} data={data}/>
+                : <></>
+            }
         </div>
     )
 }

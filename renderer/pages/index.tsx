@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 
 import DateService from "../../utils/DateService";
 import { useEffect, useState } from "react";
+import { useStudentsStore } from "../store";
 
 export default function Index () {
 
@@ -21,10 +22,15 @@ export default function Index () {
 	}
 
 	
-	
+	const setStudents = useStudentsStore((state: any) => state.setStudents);
 
 	useEffect(() => {
 		window.main.send("find-lectures-by-week");
+		window.main.send("find-all-students-with-phones-and-debt");
+
+		window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
+            setStudents(event);
+        });
 
 		window.main.receive("find-lectures-by-week-success", (event, data) => {
 			setWeekdata(event);
@@ -36,9 +42,11 @@ export default function Index () {
 			setLoading(false);
 		});
 
+
 		return () => {
 			window.main.stop("find-lectures-by-week-success");
 			window.main.stop("find-lectures-by-week-error");
+			window.main.stop("find-all-students-with-phones-and-debt-success");
 		}
 	}, [])
 

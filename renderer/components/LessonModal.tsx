@@ -2,12 +2,14 @@ import { useForm } from "react-hook-form";
 import Modal from "./Modal";
 import { Lesson } from "../intefaces";
 import Field from "./Field";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useStudentsStore } from "../store";
 
 const SearchUser = ({ setUser }) => {
     const students = useStudentsStore((state: any) => state.students);
     const [filteredStudents, setFilteredStudents] = useState([]);
+
+    const nameRef = useRef()
 
     const [selected, setSelected] = useState(null);
 
@@ -23,30 +25,40 @@ const SearchUser = ({ setUser }) => {
     }
 
     const handleSelect = (data) => {
-        setSelected(data)
-        setUser(data.student);
+        if (data.student.cpf === selected?.student.cpf) {
+            setSelected(null)
+            setUser(null)
+        } else {
+            setSelected(data)
+            setUser(data.student)
+        }
+        nameRef.current.value = "";
+        setFilteredStudents([])
     }
 
     return (
         <div className="p-2 w-full">
-            <h3>Buscar aluno</h3>
-            <input type="search" className="w-full p-2" onChange={handleChangeName} placeholder="Nome do aluno..."/>
-            <div className="h-40 overflow-y-auto p-3">
+            <h3 className="font-bold text-lg">Buscar aluno</h3>
+            <input ref={nameRef} type="search" className="w-full p-2 font-bold border-2 border-darkBlue rounded-md" onChange={handleChangeName} placeholder="Nome do aluno..."/>
+            <div className={`${filteredStudents.length !== 0 ? "h-40" : "h-10"} overflow-y-auto p-3`}>
                 {
-                    filteredStudents.length === 0 ?
-                        <h3>Nenhum aluno encontrado</h3>
+                    nameRef.current.value === "" ?
+                        <></>
                     :
-                        <div itemType="square">
-                            {
-                                filteredStudents.map((data, index) => {
-                                    return (
-                                        <div className={`p-1 ${data.student.cpf === selected?.student.cpf ? "bg-emerald-400" : ""}`} onClick={() => handleSelect(data)}>
-                                            <p className="font-bold">{data.student.name}</p>    
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
+                        filteredStudents.length === 0 ?
+                            <h3>Nenhum aluno encontrado</h3>
+                        :
+                            <div itemType="square">
+                                {
+                                    filteredStudents.map((data, index) => {
+                                        return (
+                                            <div key={index} className={`p-1 ${data.student.cpf === selected?.student.cpf ? "bg-emerald-400" : ""}`} onClick={() => handleSelect(data)}>
+                                                <p className="font-bold">{data.student.name}</p>    
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
                 }
             </div>
         </div>
@@ -96,13 +108,13 @@ export default function LessonModal ({ isOpen, closeModal, lesson }) {
                     <form className="overflow-auto h-96 p-4" onSubmit={handleSubmit(onSubmit)}>
                         <SearchUser setUser={setUser}/>
                         <div className="w-full p-2">
-                            <h3>Aluno: {user?.name}</h3>
+                            <h3 className="font-bold text-lg">Aluno(a): <span className="text-primaryBlue underline">{user?.name}</span></h3>
                         </div>
                         <Field name="startAt" control={control} rules={{ required: true }} error={ errors.startAt } label="Início da aula" type="datetime-local"/>
                         <Field name="endAt" control={control} rules={{ required: true }} error={ errors.endAt } label="Fim da aula" type="datetime-local"/>
                         <Field name="value" control={control} rules={{ required: true }} error={ errors.value } label="Valor da aula" type="number" step={5}/>
-                        <div className="w-full p-2">
-                            <button type="submit">{ isSubmitting ? "Enviando" :  lesson ? "Alterar": "Salvar" }</button>
+                        <div className="flex w-full p-2 justify-end">
+                            <button className="flex font-bold text-lg text-white px-8 py-2 rounded-md bg-darkBlue" type="submit">{ isSubmitting ? "Enviando" :  lesson ? "Alterar": "Salvar" }</button>
                         </div>
                     </form>
                 </div>

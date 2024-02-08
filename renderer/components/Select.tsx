@@ -9,11 +9,11 @@ export default function Select ({ name, control, options, ...args }) {
             render={({ field }) => {
                 return (
                     <select {...field} {...args}>
-                        <option value=""></option>
+                        <option value="">-</option>
                         {
                             options.map((option, index) => {
                                 return (
-                                    <option key={index} value={option.value}>{option.text}</option>
+                                    <option className="font-bold" key={index} value={option.value}>{option.text}</option>
                                 )
                             })
                         }
