@@ -6,6 +6,40 @@ import { useEffect, useState } from "react";
 import DateService from "../../utils/DateService";
 import StudentModal from "../components/StudentModal";
 import { useStudentsStore } from "../store";
+import { toast } from "react-hot-toast";
+
+const handleEditUser = (data, setStudents) => {
+    let { name, motherName, cpf, bornDate, gradeType, gradeYear, observation, phone1, phone2 } = data;
+
+    bornDate = new Date(bornDate).toISOString();
+
+    const grade = `${gradeYear} Ano ${gradeType}`;
+
+    const studentPayload = { name, motherName, cpf, bornDate, grade, observation };
+
+    let phonesPayload = [{ user_cpf: cpf, number: phone1 }];
+    if (phone2 && phone2.length !== 0) {
+        phonesPayload.push({ user_cpf: cpf, number: phone2 });
+    }
+
+    window.main.send("update-user", cpf, studentPayload);
+
+    window.main.receive("update-user-success", (event) => {
+        toast.success("Dados editados");
+        window.main.send("find-all-students-with-phones-and-debt");
+
+        window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
+            setStudents(event)
+            window.main.stop("find-all-students-with-phones-and-debt-success");
+        });
+        window.main.stop("update-user-success")
+    })
+
+    window.main.receive("update-user-error", (event) => {
+        toast.error("Algo deu errado");
+        window.main.stop("update-user-error");
+    })
+}
 
 const FindUsers = () => {
     return (
@@ -28,7 +62,8 @@ const FindUsers = () => {
 
 const StudentCard = ({ data }) => {
 
-    const { student, phones, debtAmount } = data;
+    let { student, phones, debtAmount } = data;
+    const setStudents = useStudentsStore((state: any) => state.setStudents);
 
     const age = `${DateService.getAge(student.bornDate)} anos`;
 
@@ -36,6 +71,16 @@ const StudentCard = ({ data }) => {
 
     const handleClose = () => {
         setOpen(false)
+    }
+
+    student["phone1"] = phones[0]?.number;
+    student["phone2"] = "";
+    if (phones[1]) {
+        student["phone2"] = phones[1].number;
+    }
+
+    const onEditUser = (data) => {
+        handleEditUser(data, setStudents);
     }
 
     return (
@@ -67,11 +112,7 @@ const StudentCard = ({ data }) => {
                     </div>
                 </div>
             </div>
-            {
-                student ?
-                    <StudentModal isOpen={open} closeModal={handleClose} data={data}/>
-                : <></>
-            }
+                <StudentModal onSave={onEditUser} isOpen={open} closeModal={handleClose} student={student}/>
         </div>
     )
 }

@@ -1,117 +1,124 @@
-import { Plus } from "lucide-react";
-import Modal from "./Modal";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { User, GradeTypeEnum, GradeYearEnum } from "../intefaces";
-import { useState } from "react";
+import Modal from "./Modal";
+import { Lesson } from "../intefaces";
+import Field from "./Field";
+import { useRef, useState } from "react";
+import { useStudentsStore } from "../store";
 
-const Field = ({ name, label, register, rules, error, ...args }) => {
+const SearchUser = ({ setUser }) => {
+    const students = useStudentsStore((state: any) => state.students);
+    const [filteredStudents, setFilteredStudents] = useState([]);
+
+    const nameRef = useRef()
+
+    const [selected, setSelected] = useState(null);
+
+    const handleChangeName = (event) => {
+        let name = event.target.value;
+
+        if (name.trim().length === 0) {
+            setFilteredStudents([]);
+        } else {    
+            const filtered = students.filter((data) => data.student.name.toLowerCase().includes(name.toLowerCase()));
+            setFilteredStudents(filtered);
+        }
+    }
+
+    const handleSelect = (data) => {
+        if (data.student.cpf === selected?.student.cpf) {
+            setSelected(null)
+            setUser(null)
+        } else {
+            setSelected(data)
+            setUser(data.student)
+        }
+        nameRef.current.value = "";
+        setFilteredStudents([])
+    }
+
     return (
-        <div className="flex flex-col px-5 my-3">
-            <label className="text-darkBlue font-bold text-lg mx-5">{label}</label>
-            <input {...args} className="mx-6 p-2 border-2 border-darkBlue rounded-md bg-slate-200" {...register(name, rules)}/>
-            {error && <p className="text-primaryBlue font-bold px-7">Preencha este campo</p>}
+        <div className="p-2 w-full">
+            <h3 className="font-bold text-lg">Buscar aluno</h3>
+            <input ref={nameRef} type="search" className="w-full p-2 font-bold border-2 border-darkBlue rounded-md" onChange={handleChangeName} placeholder="Nome do aluno..."/>
+            <div className={`${filteredStudents.length !== 0 ? "h-40" : "h-10"} overflow-y-auto p-3`}>
+                {
+                    nameRef.current?.value === "" ?
+                        <></>
+                    :
+                        filteredStudents.length === 0 ?
+                            <h3>Nenhum aluno encontrado</h3>
+                        :
+                            <div itemType="square">
+                                {
+                                    filteredStudents.map((data, index) => {
+                                        return (
+                                            <div key={index} className={`p-1 ${data.student.cpf === selected?.student.cpf ? "bg-emerald-400" : ""}`} onClick={() => handleSelect(data)}>
+                                                <p className="font-bold">{data.student.name}</p>    
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                }
+            </div>
         </div>
     )
 }
 
+export default function LessonModal ({ isOpen, closeModal, lesson }) {
+    let defaultValues = {};
 
-export default function StudentModal () {
+    const [user, setUser] = useState(null);
 
-    const [open, setOpen] = useState(false);
-
-    const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<User>();
-
-    const onSubmit = (data: User) => {
-        const { name, motherName, phone1, phone2, bornDate, gradeYear, gradeType, cpf, observation } = data;
-
-        const formattedBornDate = new Date(bornDate).toISOString();
-
-        const payload = {
-            name,
-            motherName: motherName,
-            bornDate: formattedBornDate,
-            grade: `${GradeYearEnum[gradeYear]} Ano ${GradeTypeEnum[gradeType]}`,
-            cpf,
-            observation
-        }    
-        window.main.send("create-user", payload);
-
-        window.main.receive("create-user-success", (event) => {
-            console.log(event);
-            console.log("ssjnscwcecevev")
-            toast.success("Aluno cadastrado")
-        });
-        
-        window.main.receive("create-user-error", (event) => {
-            toast.error("Algo deu errado. Verifique os dados");
-        });
-
-        window.main.stop("create-user-success");
-        window.main.stop("create-user-error");
-    }
-   
-    let years = [];
-    for (let i = 1; i < 10; i++) {
-        years.push({ value: `y${i}`, text: `${i}°` });
+    if (lesson) {
+        defaultValues = {};
     }
 
-    const handleCloseModal = () => {
-        reset();
-        setOpen(false);
+    const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<Lesson>({ defaultValues });
+
+    const onSubmit = (newLesson) => {
+        if (user) {
+            console.log(newLesson, user.cpf);
+            window.main.send("create-lesson", newLesson);
+
+            window.main.receive("create-lesson-success", event => {
+                console.log(event)
+                console.log("edwfwqfwq")
+                window.main.stop("create-lesson-success")
+            })
+
+            window.main.receive("create-lesson-error", event => {
+                console.log(event)
+                console.log("error")
+                window.main.stop("create-lesson-error")
+            })
+        }
+    }
+
+    const handleClose = () => {
+        setUser(null)
+        reset()
+        closeModal();
     }
 
     return (
         <div>
-            <Modal title="Cadastrar aluno" isOpen={open} closeModal={handleCloseModal}>
-                <div className="flex justify-center items-center w-full my-2 h-4/5" style={{userSelect: "none"}}>
-                    <form className="overflow-auto h-96" onSubmit={handleSubmit(onSubmit)}>
-                        <Field name="name" register={register} rules={{required: true}} label="Nome" error={errors.name}/>
-                        <Field name="motherName" register={register} rules={{required: true}} label="Nome da mãe" error={errors.motherName}/>
-                        <div className="flex flex-col px-5 my-3">
-                            <label className="text-darkBlue font-bold text-lg mx-5">Telefone(s)</label>
-                            <div className="flex w-full ">
-                                <input placeholder="(00)0000-0000" className="mx-6 w-full p-2 border-2 border-darkBlue rounded-md bg-slate-200" type="tel" {...register("phone1", { required: true, pattern: /^\([1-9]{2}\)\d{4,5}-\d{4}$/ })}/>
-                                <input placeholder="(00)0000-0000" className="mx-6 w-full p-2 border-2 border-darkBlue rounded-md bg-slate-200" type="tel" {...register("phone2", { required: false, pattern: /^\([1-9]{2}\)\d{4,5}-\d{4}$/ })}/>
-                            </div>
-                            {errors.phone1 && <p className="text-primaryBlue font-bold px-7">Preencha este campo</p>}
+            <Modal isOpen={isOpen} closeModal={handleClose} title={lesson ? "Dados da aula" : "Nova aula"}>
+                <div>
+                    <form className="overflow-auto h-96 p-4" onSubmit={handleSubmit(onSubmit)}>
+                        <SearchUser setUser={setUser}/>
+                        <div className="w-full p-2">
+                            <h3 className="font-bold text-lg">Aluno(a): <span className="text-primaryBlue underline">{user?.name}</span></h3>
                         </div>
-                        <Field name="bornDate" register={register} rules={{required: true}} label="Data de nascimento" error={errors.bornDate} type="date"/>
-                        <div className="flex flex-col px-5 my-3">
-                            <label className="text-darkBlue font-bold text-lg mx-5">Série</label>
-                            <div className="flex items-center w-fit mx-6 border-2 border-darkBlue rounded-md">
-                                <select className="p-2 font-bold text-darkBlue bg-slate-200 rounded-md" {...register("gradeYear", { required: true })}>
-                                    {
-                                        years.map((year) => {
-                                            return (
-                                                <option className="font-bold text-darkBlue" key={year.value} value={year.value}>{year.text}</option>
-                                            )
-                                        })
-                                    }
-                                </select>
-                                <p className="mx-3 font-bold text-darkBlue">Ano do</p>
-                                <select className="p-2 font-bold text-darkBlue bg-slate-200 rounded-md" {...register("gradeType", { required: true })}>
-                                    <option className="font-bold text-darkBlue" value="EF">E.F.</option>
-                                    <option className="font-bold text-darkBlue" value="EM">E.M.</option>
-                                </select>
-                            </div>
-                        </div>
-                        <Field name="cpf" label="CPF" register={register} rules={{required: true, pattern: /^\d{3}\.\d{3}\.\d{3}\-\d{2}/}} error={errors.cpf} placeholder="XXX.XXX.XXX-XX" />
-                        <div className="flex flex-col px-5 my-3">
-                            <label className="text-darkBlue font-bold text-lg mx-5">Observações</label>
-                            <textarea className="mx-6 p-2 border-2 border-darkBlue rounded-md bg-slate-200" {...register("observation", { required: false })} rows={4}></textarea>
-                        </div>
-                        <div className="flex justify-end px-4 my-5">
-                            <button className="mx-10 bg-primaryBlue px-8 py-2 rounded-md text-white font-bold text-lg" type="submit">{isSubmitting ? "Salvando..." : "Salvar"}</button>
+                        <Field name="startAt" control={control} rules={{ required: true }} error={ errors.startAt } label="Início da aula" type="datetime-local"/>
+                        <Field name="endAt" control={control} rules={{ required: true }} error={ errors.endAt } label="Fim da aula" type="datetime-local"/>
+                        <Field name="value" control={control} rules={{ required: true }} error={ errors.value } label="Valor da aula" type="number" step={5}/>
+                        <div className="flex w-full p-2 justify-end">
+                            <button className="flex font-bold text-lg text-white px-8 py-2 rounded-md bg-darkBlue" type="submit">{ isSubmitting ? "Enviando" :  lesson ? "Alterar": "Salvar" }</button>
                         </div>
                     </form>
                 </div>
             </Modal>
-            <div onClick={() => setOpen(!open)}>
-                <div className="p-2 w-full bg-lightRed rounded-md shadow-sm shadow-slate-700">
-                    <Plus color="white" size={36}/>
-                </div>
-            </div>
         </div>
     )
 }

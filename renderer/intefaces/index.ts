@@ -15,3 +15,11 @@ export interface Lesson {
     endAt: Date;
     value: number;
 }
+
+export interface EditLecture {
+    startAt: Date;
+    endAt: Date;
+    value: number;
+    payed: boolean;
+    presence: boolean
+}
