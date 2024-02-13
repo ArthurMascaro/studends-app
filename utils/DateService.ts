@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+
 import dayjs from "./dayjs.config";
 
 class DateService {
@@ -35,6 +35,18 @@ class DateService {
 
     static toInputDate (date) {
         return dayjs(date).format("YYYY-MM-DD");
+    }
+
+    static format (date) {
+        return dayjs(date).format("DD/MM/YYYY HH:mm");
+    }
+
+    static getDay (date) {
+        return dayjs(date).format("DD/MM/YYYY");
+    }
+
+    static getTime (date) {
+        return dayjs(date).format("HH:mm")
     }
 }
 

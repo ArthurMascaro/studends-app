@@ -4,16 +4,33 @@ import Layout from "../components/Layout";
 
 import DateService from "../../utils/DateService";
 import { useEffect, useState } from "react";
-import { useStudentsStore, useWeekStore } from "../store";
+import { useLessonsStore, useStudentsStore, useWeekStore } from "../store";
 import { fetchData } from "../api";
+
+const LectureCard = ({ lecture }) => {
+	const students = useStudentsStore((state: any) => state.students);
+	const { student, debtAmount } = students.filter((data) => data.student.cpf === lecture.user_cpf)[0];
+
+	const lessons = useLessonsStore((state: any) => state.lessons);
+	const lesson = lessons.filter((l) => l.id === lecture.lesson_id)[0];
+	
+	return (
+		<div className={`${debtAmount !== 0 ? "bg-lightRed" : "bg-white"} flex w-full h-20 rounded-md`}>
+			<h1>{student.name}</h1>
+			<h2>{DateService.getTime(lesson.startAt)}</h2>
+		</div>
+	)
+}
 
 export default function Index () {
 
 	const setStudents = useStudentsStore((state: any) => state.setStudents);
 	const students = useStudentsStore((state: any) => state.students);
 
-	const setWeek = useWeekStore((state: any) => state.setWeek)
-	const days = useWeekStore((state: any) => state.days)
+	const setWeek = useWeekStore((state: any) => state.setWeek);
+	const days = useWeekStore((state: any) => state.days);
+
+	const setLessons = useLessonsStore((state: any) => state.setLessons);
 
 	const [loading, setLoading] = useState(true);
 
@@ -22,14 +39,18 @@ export default function Index () {
 
 	const [activeDay, setActiveDay] = useState(week[today.day()].date);
 
+	const [dayLectures, setDayLectures] = useState([])
+
 	const handleSelectDay = (item) => {
-		const { day, date } = item;
+		const { date } = item;
 		setActiveDay(week[date.day()].date);
+		setDayLectures(days[DateService.toInputDate(date)]);
 	}
 
 	useEffect(() => {
-		fetchData(setStudents, setWeek, null, null);
+		fetchData(setStudents, setWeek, setLessons, null);
 		if (students && days) {
+			setDayLectures(days[DateService.toInputDate(activeDay)]);
 			setLoading(false);
 		}
 	}, [])
@@ -60,18 +81,19 @@ export default function Index () {
 							})
 						}
 					</div>
-					<div className="flex w-full my-5 h-full justify-center">
+					<div className="flex flex-row w-full my-5 h-full justify-center">
 						{
 							loading ?
 								<p>Carregando...</p>
 							:
-								<div className="flex flex-col w-11/12 h-5/6  rounded-md overflow-y-auto">
-									<h1 className="p-5 m-10">Oi</h1>
-									<h1 className="p-5 m-10">Oi</h1>
-									<h1 className="p-5 m-10">Oi</h1>
-									<h1 className="p-5 m-10">Oi</h1>
-									<h1 className="p-5 m-10">Oi</h1>
-								</div>
+								dayLectures?.length === 0 ?
+									<h1>Sem aulas por hoje! Aproveite o dia!</h1>
+								:
+									dayLectures?.map((lecture, index) => {
+										return (
+											<LectureCard lecture={lecture} key={index}/>
+										)
+									})
 						}
 					</div>
 				</div>

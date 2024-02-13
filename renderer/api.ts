@@ -9,7 +9,7 @@ export function fetchData (setStudents, setWeek, setLessons, setLectures ) {
     }
 
     if (setWeek) {
-        window.main.send("find-find-lectures-by-week-success")
+        window.main.send("find-lectures-by-week")
         window.main.receive("find-lectures-by-week-success", event => {
             window.main.stop("find-lectures-by-week-success");
             setWeek(event);
@@ -25,9 +25,9 @@ export function fetchData (setStudents, setWeek, setLessons, setLectures ) {
     }
 
     if (setLectures) {
-        window.main.send("find-all-lectures");
-        window.main.receive("find-all-lectures-success", event => {
-            window.main.stop("find-all-lectures-success");
+        window.main.send("find-all-lectures-sorted-by-date");
+        window.main.receive("find-all-lectures-sorted-by-date-success", event => {
+            window.main.stop("find-all-lectures-sorted-by-date-success");
             setLectures(event);
         })
     }

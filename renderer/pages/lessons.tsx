@@ -7,8 +7,10 @@ import { useLecturesStore, useLessonsStore, useStudentsStore } from "../store";
 import { CheckCircle, XCircle } from "lucide-react";
 import LectureModal from "../components/LectureModal";
 import { toast } from "react-hot-toast";
+import { fetchData, sendEvent } from "../api";
+import DateService from "../../utils/DateService";
 
-const handleAddLesson = (data) => {
+const handleAddLesson = async (data, setLessons, setLectures) => {
     let { cpf, startAt, endAt, value } = data;
 
     startAt = new Date(startAt).toISOString();
@@ -18,25 +20,21 @@ const handleAddLesson = (data) => {
     const payed = false;
     const presence = false;
 
-    window.main.send("create-lesson", { startAt, endAt, value });
-
-    window.main.receive("create-lesson-success", (lesson) => {
-        const id = lesson.id;
-        
-        window.main.send("create-lecture", { user_cpf: cpf, lesson_id: id, payed, presence });
-
-        window.main.receive("create-lecture-success", (lecture) => {
-            toast.success("Aula criada");
-            window.main.stop("create-lecture-success");
-        })
-
-        window.main.stop("create-lesson-success");
-    })
-
-    window.main.receive("create-lesson-error", (event) => {
-        toast.error("Algo deu errado")
-        window.main.stop("create-lesson-error");
-    })
+    try {
+        let lesson = null;
+        lesson = await sendEvent("create-lesson", { startAt, endAt, value }) ;
+        if (lesson) {
+            let id = lesson.id;
+            try {
+                await sendEvent("create-lecture", { user_cpf: cpf, lesson_id: id, payed, presence });
+                toast.success("Aula criada");
+            } catch (error) {
+                toast.error("Algo deu errado");
+            }
+        } 
+    } catch (error) {
+        toast.error("Algo deu errado");
+    }
 }
 
 const handleEditLecture = (data, setLessons, setLectures) => {
@@ -45,11 +43,10 @@ const handleEditLecture = (data, setLessons, setLectures) => {
 
 const LectureCard = ({ lecture }) => {
     const students = useStudentsStore((state: any) => state.students);
-    const student = students.filter((s) => s.cpf === lecture.user_cpf)[0];
-    console.log(students);
+    const { student } = students.filter((data) => data.student.cpf === lecture.user_cpf)[0];
 
     const lessons = useLessonsStore((state: any) => state.lessons);
-    const lesson = lessons.filter((l) => l.id === lecture.lesson_id);
+    const lesson = lessons.filter((l) => l.id === lecture.lesson_id)[0];
 
     const setLessons = useLessonsStore((state: any) => state.setLessons)
     const setLectures = useLecturesStore((state: any) => state.setLectures)
@@ -62,27 +59,26 @@ const LectureCard = ({ lecture }) => {
 
     return (
         <div>
-            <div className="flex p-3 bg-primaryBlue">
-                <div>
-                    <h2>{student.name}</h2>
+            <div className="flex p-3 bg-primaryBlue mx-2 my-6 items-center gap-10 shadow-md shadow-darkBlue rounded-md">
+                <div className="w-2/5 p-3 border-r-4 border-r-white ">
+                    <h2 className="text-white font-bold text-2xl">{student.name}</h2>
                 </div>
-                <div className="h-5 w-1 bg-white"></div>
-                <div>
+                <div className="flex items-center w-full gap-10 justify-around">
                     <div>
-                        <h4></h4>
-                        <h4></h4>
+                        <h4 className="font-bold text-lg text-white">{DateService.getDay(lesson.startAt)}</h4>
+                        <h4 className="font-bold text-lg text-white">{DateService.getTime(lesson.startAt)} - {DateService.getTime(lesson.endAt)}</h4>
+                    </div>
+                    <div className="p-2">
+                        <h4 style={{userSelect: "none"}} className="font-bold text-lg text-white">{lecture.presence ? "Presente" : "Ausente"}</h4>
                     </div>
                     <div>
-                        <h4>{lecture.presence ? "Presente" : "Ausente"}</h4>
-                    </div>
-                    <div>
-                        <div className="bg-darkBlue">
-                            <h3>Pagamento</h3>
+                        <div className="bg-darkBlue flex gap-10 px-4 py-2 rounded-md items-center">
+                            <h3 className="text-white font-bold text-lg">Pagamento</h3>
                             {
                                 lecture.payed ?
-                                    <CheckCircle/>
+                                    <CheckCircle color="white" size={30}/>
                                 :
-                                    <XCircle/>
+                                    <XCircle color="white" size={30}/>
                             }
                         </div>
                     </div>
@@ -102,27 +98,20 @@ export default function Lessons () {
     const lectures = useLecturesStore((state: any) => state.lectures);
     const setLectures = useLecturesStore((state: any) => state.setLectures);
 
-    const [loading, setLoading] = useState(true)
+    const setStudents = useStudentsStore((state: any) => state.setStudents);
+
+    const [loading, setLoading] = useState(true);
+
+    const onAddLesson = (data) => {
+        handleAddLesson(data, setLessons, setLectures);
+    }
 
     useEffect(() => {
-        window.main.send("find-all-lectures");
-        window.main.send("find-all-lessons");
-        window.main
-
-        window.main.receive("find-all-lectures-success", (event) => {
-            setLectures(event);
+        fetchData(setStudents, null, setLessons, setLectures);
+        if (lessons && lectures) {
             setLoading(false);
-        })
-
-        window.main.receive("find-all-lessons-success", event => {
-            setLessons(event);
-        })
-
-        window.main.receive("find-all-lectures-error", (event) => {
-            setLessons([]);
-            setLoading(false);
-        })
-    })
+        }
+    }, [])
 
     return (
         <Layout>
@@ -139,7 +128,7 @@ export default function Lessons () {
                                 </div>
                             </div>
                         </div>
-                        <LessonModal isOpen={open} closeModal={() => setOpen(false)} onSave={handleAddLesson}/>
+                        <LessonModal isOpen={open} closeModal={() => setOpen(false)} onSave={onAddLesson}/>
                     </div>
                     <div className="my-5 w-5/6 h-1 bg-darkBlue"></div>
                     <div className="flex flex-col w-11/12 overflow-y-auto">
@@ -150,9 +139,9 @@ export default function Lessons () {
                                 lectures.length === 0 ? 
                                     <p>Nenhuma aula encontrada</p>
                                 :
-                                    lectures.map((lecture) => {
+                                    lectures.map((lecture, index) => {
                                         return (
-                                            <LectureCard lecture={lecture}/>
+                                            <LectureCard key={index} lecture={lecture}/>
                                         )
                                     })
                         }

@@ -62,6 +62,7 @@ class LectureDAO {
         try {
             const currentDate = new Date();
             const startDate = new Date(currentDate);
+            console.log(currentDate, startDate);
             startDate.setDate(startDate.getDate() - startDate.getDay());
             const endDate = new Date(startDate);
             endDate.setDate(endDate.getDate() + 6);
