@@ -118,6 +118,22 @@ class UserDAO {
             return event.reply("update-phone-error", error.message);
         }
     }
+    async updateManyPhones(event, phoneDataList) {
+        try {
+            const updatedPhones = [];
+            for (const phoneData of phoneDataList) {
+                const updatedPhone = await this.prisma.phone.update({
+                    where: { id: phoneData.id },
+                    data: phoneData,
+                });
+                updatedPhones.push(updatedPhone);
+            }
+            return event.reply("update-many-phones-success", updatedPhones);
+        }
+        catch (error) {
+            return event.reply("update-many-phones-error", error.message);
+        }
+    }
     async findUserByName(event, name) {
         try {
             const result = await this.prisma.user.findMany({

@@ -7,39 +7,7 @@ import DateService from "../../utils/DateService";
 import StudentModal from "../components/StudentModal";
 import { useStudentsStore } from "../store";
 import { toast } from "react-hot-toast";
-
-const handleEditUser = (data, setStudents) => {
-    let { name, motherName, cpf, bornDate, gradeType, gradeYear, observation, phone1, phone2 } = data;
-
-    bornDate = new Date(bornDate).toISOString();
-
-    const grade = `${gradeYear} Ano ${gradeType}`;
-
-    const studentPayload = { name, motherName, cpf, bornDate, grade, observation };
-
-    let phonesPayload = [{ user_cpf: cpf, number: phone1 }];
-    if (phone2 && phone2.length !== 0) {
-        phonesPayload.push({ user_cpf: cpf, number: phone2 });
-    }
-
-    window.main.send("update-user", cpf, studentPayload);
-
-    window.main.receive("update-user-success", (event) => {
-        toast.success("Dados editados");
-        window.main.send("find-all-students-with-phones-and-debt");
-
-        window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
-            setStudents(event)
-            window.main.stop("find-all-students-with-phones-and-debt-success");
-        });
-        window.main.stop("update-user-success")
-    })
-
-    window.main.receive("update-user-error", (event) => {
-        toast.error("Algo deu errado");
-        window.main.stop("update-user-error");
-    })
-}
+import { fetchData, sendEvent } from "../api";
 
 const FindUsers = () => {
     return (
@@ -58,6 +26,37 @@ const FindUsers = () => {
             </button>
         </div>
     )
+}
+
+const handleEditUser = async (data, phones, setStudents) => {
+    let { name, motherName, cpf, bornDate, gradeType, gradeYear, observation, phone1, phone2 } = data;
+
+    bornDate = new Date(bornDate).toISOString();
+
+    const grade = `${gradeYear} Ano ${gradeType}`;
+
+    const studentPayload = { name, motherName, cpf, bornDate, grade, observation };
+
+    phones[0].number = phone1
+    let phonesPayload = [phones[0]];
+    if (phone2 && phone2.length !== 0) {
+        phones[1].number = phone2;
+        phonesPayload.push(phones[1]);
+    }
+
+    try {
+        await sendEvent("update-user", cpf, studentPayload);
+        try {
+            await sendEvent("update-many-phones", phonesPayload);
+            toast.success("Dados atualizados");
+        } catch (error) {
+            toast.error("Algo deu errado");
+        } 
+    } catch (error) {
+        toast.error("Algo deu errado");
+    }
+
+    fetchData(setStudents, null, null, null);
 }
 
 const StudentCard = ({ data }) => {
@@ -79,8 +78,8 @@ const StudentCard = ({ data }) => {
         student["phone2"] = phones[1].number;
     }
 
-    const onEditUser = (data) => {
-        handleEditUser(data, setStudents);
+    const onEditUser = (data, phones) => {
+        handleEditUser(data, phones, setStudents);
     }
 
     return (
@@ -112,7 +111,7 @@ const StudentCard = ({ data }) => {
                     </div>
                 </div>
             </div>
-                <StudentModal onSave={onEditUser} isOpen={open} closeModal={handleClose} student={student}/>
+                <StudentModal onSave={onEditUser} isOpen={open} closeModal={handleClose} phones={phones} student={student}/>
         </div>
     )
 }
@@ -125,24 +124,12 @@ export default function Students () {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        window.main.send("find-all-students-with-phones-and-debt");
-
-		window.main.receive("find-all-students-with-phones-and-debt-success", (event) => {
-            setStudents(event);
+        fetchData(setStudents, null, null, null);
+        if (students) {
             setLoading(false);
-        });
-
-		window.main.receive("find-all-students-with-phones-and-debt-error", (event) => {
-            setStudents([]);
-            setLoading(false);
-        });
-
-		return () => {
-			window.main.stop("find-all-students-with-phones-and-debt-success");
-			window.main.stop("find-all-students-with-phones-and-debt-error");
-		}
+        }
     }, [])
-    
+
 	return (
 		<Layout>
             <Header>

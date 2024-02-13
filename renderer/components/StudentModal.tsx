@@ -7,7 +7,7 @@ import Field from "./Field";
 import Select from "./Select";
 import TextArea from "./TextArea";
 
-export default function StudentModal ({ isOpen, closeModal, onSave, student }) {
+export default function StudentModal ({ isOpen, closeModal, onSave, student, phones }) {
     const { control, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<User>();
 
     const handleClose = () => {
@@ -16,7 +16,7 @@ export default function StudentModal ({ isOpen, closeModal, onSave, student }) {
     }
 
     const onSubmit = (data) => {
-        onSave(data);
+        onSave(data, phones);
         handleClose();
     }
 

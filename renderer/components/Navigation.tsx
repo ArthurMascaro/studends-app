@@ -2,10 +2,43 @@ import Link from "next/link";
 import { BookOpen, Calendar, CircleDollarSign, Plus, Users } from "lucide-react";
 import { useState } from "react";
 import StudentModal from "./StudentModal";
+import { fetchData, sendEvent } from "../api";
+import { toast } from "react-hot-toast";
+import { useStudentsStore } from "../store";
 
 export default function Navigation () {
 
     const [open, setOpen] = useState(false);
+    const setStudents = useStudentsStore((state: any) => state.setStudents)
+
+    const handleAddUser = async (data, phones) => {
+        let { name, motherName, cpf, bornDate, gradeType, gradeYear, observation, phone1, phone2 } = data;
+    
+        bornDate = new Date(bornDate).toISOString();
+    
+        const grade = `${gradeYear} Ano ${gradeType}`;
+    
+        const student = { name, motherName, cpf, bornDate, grade, observation };
+    
+        let phonesPayload = [{ user_cpf: cpf, number: phone1 }];
+        if (phone2 && phone2.length !== 0) {
+            phonesPayload.push({ user_cpf: cpf, number: phone2 });
+        }
+
+        try {
+            await sendEvent("create-user", student);
+            try {
+                await sendEvent("create-many-phones", phonesPayload);
+                toast.success("Aluno adicionado");
+            } catch (error) {
+                toast.error("Algo deu errado")
+            } 
+        } catch (error) {
+            toast.error("Algo deu errado");
+        }
+
+        fetchData(setStudents, null, null, null);
+    }
 
     return (
         <div className="bg-primaryBlue flex flex-col h-3/5 p-4 justify-evenly rounded-xl shadow-lg shadow-indigo-900">
@@ -15,7 +48,7 @@ export default function Navigation () {
                         <Plus color="white" size={36}/>
                     </div>
                 </div>
-                <StudentModal isOpen={open} closeModal={() => setOpen(false)} data={undefined}/>
+                <StudentModal isOpen={open} closeModal={() => setOpen(false)} onSave={handleAddUser} student={null} phones={null}/>
             </div>
             <div className="flex flex-col justify-around h-3/5">
                 <div>

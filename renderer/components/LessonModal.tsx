@@ -8,7 +8,7 @@ import SearchStudent from "./SearchStudent";
 
 export default function LessonModal ({ isOpen, closeModal, onSave }) {
 
-    const [user, setUser] = useState({ cpf: "123.456.789-00", name: "José" });
+    const [user, setUser] = useState(null);
 
     const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<Lesson>();
 
@@ -16,6 +16,8 @@ export default function LessonModal ({ isOpen, closeModal, onSave }) {
         onSave({...data, cpf: user.cpf });
         handleClose();
     }
+
+    console.log(user)
 
     const handleClose = () => {
         setUser(null)
@@ -30,7 +32,7 @@ export default function LessonModal ({ isOpen, closeModal, onSave }) {
                     <form className="overflow-auto h-96 p-4" onSubmit={handleSubmit(onSubmit)}>
                         <SearchStudent setStudent={setUser}/>
                         <div className="w-full p-2">
-                            <h3 className="font-bold text-lg">Aluno(a): <span className="text-primaryBlue underline">{user?.name}</span></h3>
+                            <h3 className="font-bold text-lg">Aluno(a): {user?.name}</h3>
                         </div>
                         <Field name="startAt" control={control} rules={{ required: true }} error={ errors.startAt } label="Início da aula" type="datetime-local"/>
                         <Field name="endAt" control={control} rules={{ required: true }} error={ errors.endAt } label="Fim da aula" type="datetime-local"/>

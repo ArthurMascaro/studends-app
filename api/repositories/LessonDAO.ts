@@ -11,36 +11,6 @@ class LessonDAO{
 
     async create(event: any, data: ICreateLesson) {
         try {
-            // Verifica se já existe alguma aula no mesmo período
-            const existingLesson = await this.prisma.lesson.findFirst({
-                where: {
-                    OR: [
-                        {
-                            AND: [
-                                { startAt: { lte: data.endAt } },
-                                { endAt: { gte: data.startAt } }
-                            ]
-                        },
-                        {
-                            AND: [
-                                { startAt: { gte: data.startAt } },
-                                { startAt: { lte: data.endAt } }
-                            ]
-                        },
-                        {
-                            AND: [
-                                { endAt: { gte: data.startAt } },
-                                { endAt: { lte: data.endAt } }
-                            ]
-                        }
-                    ]
-                }
-            });
-
-            if (existingLesson) {
-                throw new Error("Já existe uma aula neste período.");
-            }
-
             const result = await this.prisma.lesson.create({ data });
             event.reply("create-lesson-success", result);
         } catch (error: any) {

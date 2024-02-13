@@ -6,9 +6,14 @@ import LessonModal from "../components/LessonModal";
 import { useLecturesStore, useLessonsStore, useStudentsStore } from "../store";
 import { CheckCircle, XCircle } from "lucide-react";
 import LectureModal from "../components/LectureModal";
+import { toast } from "react-hot-toast";
 
 const handleAddLesson = (data) => {
-    const { cpf, startAt, endAt, value } = data;
+    let { cpf, startAt, endAt, value } = data;
+
+    startAt = new Date(startAt).toISOString();
+    endAt = new Date(endAt).toISOString();
+    value = parseFloat(value);
 
     const payed = false;
     const presence = false;
@@ -21,7 +26,7 @@ const handleAddLesson = (data) => {
         window.main.send("create-lecture", { user_cpf: cpf, lesson_id: id, payed, presence });
 
         window.main.receive("create-lecture-success", (lecture) => {
-            console.log(lecture);
+            toast.success("Aula criada");
             window.main.stop("create-lecture-success");
         })
 
@@ -29,8 +34,8 @@ const handleAddLesson = (data) => {
     })
 
     window.main.receive("create-lesson-error", (event) => {
-        console.log("oops")
-        window.main.stop("create-lesson-success")
+        toast.error("Algo deu errado")
+        window.main.stop("create-lesson-error");
     })
 }
 
@@ -41,6 +46,7 @@ const handleEditLecture = (data, setLessons, setLectures) => {
 const LectureCard = ({ lecture }) => {
     const students = useStudentsStore((state: any) => state.students);
     const student = students.filter((s) => s.cpf === lecture.user_cpf)[0];
+    console.log(students);
 
     const lessons = useLessonsStore((state: any) => state.lessons);
     const lesson = lessons.filter((l) => l.id === lecture.lesson_id);
@@ -49,10 +55,10 @@ const LectureCard = ({ lecture }) => {
     const setLectures = useLecturesStore((state: any) => state.setLectures)
 
     const onEditLecture = (data) => {
-        handleEditLecture(data, setLessons, setLectures)
+        handleEditLecture(data, setLessons, setLectures);
     }
 
-    const [isOpen, setOpen] = useState(false)
+    const [isOpen, setOpen] = useState(false);
 
     return (
         <div>
@@ -93,17 +99,26 @@ export default function Lessons () {
     const lessons = useLessonsStore((state: any) => state.lessons);
     const setLessons = useLessonsStore((state: any) => state.setLessons);
 
+    const lectures = useLecturesStore((state: any) => state.lectures);
+    const setLectures = useLecturesStore((state: any) => state.setLectures);
+
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        window.main.send("");
+        window.main.send("find-all-lectures");
+        window.main.send("find-all-lessons");
+        window.main
 
-        window.main.receive("", (event) => {
-            setLessons(event);
+        window.main.receive("find-all-lectures-success", (event) => {
+            setLectures(event);
             setLoading(false);
         })
 
-        window.main.receive("", (event) => {
+        window.main.receive("find-all-lessons-success", event => {
+            setLessons(event);
+        })
+
+        window.main.receive("find-all-lectures-error", (event) => {
             setLessons([]);
             setLoading(false);
         })
@@ -132,10 +147,14 @@ export default function Lessons () {
                             loading ?
                                 <p>Carregando...</p>
                             :
-                                lessons.lenght === 0 ? 
+                                lectures.length === 0 ? 
                                     <p>Nenhuma aula encontrada</p>
                                 :
-                                    <h1>Aulas!</h1>
+                                    lectures.map((lecture) => {
+                                        return (
+                                            <LectureCard lecture={lecture}/>
+                                        )
+                                    })
                         }
                     </div>
 				</div>

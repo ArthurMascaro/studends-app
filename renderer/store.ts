@@ -17,6 +17,6 @@ export const useLecturesStore = create((set) => ({
 
 
 export const useWeekStore = create((set) => ({
-    week: [],
+    days: [],
     setWeek: (week) => set((state) => ({ week: week }))
 }))

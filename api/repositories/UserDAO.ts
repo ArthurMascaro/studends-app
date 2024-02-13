@@ -91,7 +91,7 @@ class UserDAO {
     } catch (error: any) {
         return event.reply("create-many-phones-error", error.message);
     }
-}
+  }
 
   async findAllPhonesByUserCpf(event: any, user_cpf: string) {
     try {
@@ -124,6 +124,22 @@ class UserDAO {
       return event.reply("update-phone-success", result);
     } catch (error: any) {
       return event.reply("update-phone-error", error.message);
+    }
+  }
+
+  async updateManyPhones(event: any, phoneDataList: IPhone[]) {
+    try {
+        const updatedPhones: IPhone[] = [];
+        for (const phoneData of phoneDataList) {
+            const updatedPhone: IPhone = await this.prisma.phone.update({
+                where: { id: phoneData.id },
+                data: phoneData,
+            });
+            updatedPhones.push(updatedPhone);
+        }
+        return event.reply("update-many-phones-success", updatedPhones);
+    } catch (error: any) {
+        return event.reply("update-many-phones-error", error.message);
     }
   }
 

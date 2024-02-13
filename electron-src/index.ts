@@ -51,7 +51,6 @@ const lessonDAO = new LessonDAO();
 
 const lectureDAO = new LectureDAO();
 
-
 // Manipuladores de eventos para operações de usuário
 ipcMain.on("create-user", (event, data) => {
     userDAO.create(event, data).catch(error => console.error(error));
@@ -146,15 +145,18 @@ ipcMain.on("find-all-phones-by-user-cpf", (event, user_cpf) => {
     userDAO.findAllPhonesByUserCpf(event, user_cpf).catch(error => console.error(error));
 });
 
+ipcMain.on("create-many-phones", (event, data) => {
+	userDAO.createManyPhones(event, data).catch(error => console.error(error));
+});
+
+ipcMain.on("update-many-phones", (event, data) => {
+	userDAO.updateManyPhones(event, data).catch(error => console.error(error));
+});
 
 
 // Manipuladores de eventos para operações de lições
 ipcMain.on("create-lesson", (event, data) => {
 	lessonDAO.create(event, data).catch(error => console.error(error));
-});
-
-ipcMain.on("create-many-phones", (event, data) => {
-	userDAO.createManyPhones(event, data).catch(error => console.error(error));
 });
 
 ipcMain.on("update-lesson", (event, id, newData) => {

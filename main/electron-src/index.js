@@ -114,12 +114,15 @@ electron_1.ipcMain.on("delete-phone", (event, id) => {
 electron_1.ipcMain.on("find-all-phones-by-user-cpf", (event, user_cpf) => {
     userDAO.findAllPhonesByUserCpf(event, user_cpf).catch(error => console.error(error));
 });
+electron_1.ipcMain.on("create-many-phones", (event, data) => {
+    userDAO.createManyPhones(event, data).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("update-many-phones", (event, data) => {
+    userDAO.updateManyPhones(event, data).catch(error => console.error(error));
+});
 // Manipuladores de eventos para operações de lições
 electron_1.ipcMain.on("create-lesson", (event, data) => {
     lessonDAO.create(event, data).catch(error => console.error(error));
-});
-electron_1.ipcMain.on("create-many-phones", (event, data) => {
-    userDAO.createManyPhones(event, data).catch(error => console.error(error));
 });
 electron_1.ipcMain.on("update-lesson", (event, id, newData) => {
     lessonDAO.update(event, id, newData).catch(error => console.error(error));
