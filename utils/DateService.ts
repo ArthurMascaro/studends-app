@@ -48,6 +48,22 @@ class DateService {
     static getTime (date) {
         return dayjs(date).format("HH:mm")
     }
+
+    static timeDiff (time1, time2) {
+        const [hour1, min1] = time1.split(":");
+        const date1 = dayjs().startOf("day").set("hour", parseInt(hour1)).set("minute", parseInt(min1));
+        
+        const [hour2, min2] = time1.split(":");
+        const date2 = dayjs().startOf("day").set("hour", parseInt(hour2)).set("minute", parseInt(min2));
+
+        const diff = date1.diff(date2, "hours");
+
+        return diff;
+    }
+
+    static toInputDatetime (date) {
+        return dayjs(date).format("YYYY-MM-DDTHH:mm");
+    }
 }
 
 export default DateService;

@@ -17,8 +17,8 @@ export interface Lesson {
 }
 
 export interface EditLecture {
-    startAt: Date;
-    endAt: Date;
+    startAt: Date | string;
+    endAt: Date | string;
     value: number;
     payed: boolean;
     presence: boolean

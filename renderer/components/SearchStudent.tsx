@@ -2,11 +2,11 @@ import { useStudentsStore } from "../store";
 import { useRef, useState } from "react";
 
 
-export default function SearchStudent ({ setStudent }) {
+export default function SearchStudent ({ setStudent, select }) {
 
     const students = useStudentsStore((state: any) => state.students);
     const [results, setResults] = useState(null);
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState(select);
 
     const input = useRef(null)
 

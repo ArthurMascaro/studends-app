@@ -6,21 +6,8 @@ import DateService from "../../utils/DateService";
 import { useEffect, useState } from "react";
 import { useLessonsStore, useStudentsStore, useWeekStore } from "../store";
 import { fetchData } from "../api";
+import DayPlanner from "../components/DayPlanner";
 
-const LectureCard = ({ lecture }) => {
-	const students = useStudentsStore((state: any) => state.students);
-	const { student, debtAmount } = students.filter((data) => data.student.cpf === lecture.user_cpf)[0];
-
-	const lessons = useLessonsStore((state: any) => state.lessons);
-	const lesson = lessons.filter((l) => l.id === lecture.lesson_id)[0];
-	
-	return (
-		<div className={`${debtAmount !== 0 ? "bg-lightRed" : "bg-white"} flex w-full h-20 rounded-md`}>
-			<h1>{student.name}</h1>
-			<h2>{DateService.getTime(lesson.startAt)}</h2>
-		</div>
-	)
-}
 
 export default function Index () {
 
@@ -89,11 +76,7 @@ export default function Index () {
 								dayLectures?.length === 0 ?
 									<h1>Sem aulas por hoje! Aproveite o dia!</h1>
 								:
-									dayLectures?.map((lecture, index) => {
-										return (
-											<LectureCard lecture={lecture} key={index}/>
-										)
-									})
+									<DayPlanner lectures={dayLectures}/>
 						}
 					</div>
 				</div>

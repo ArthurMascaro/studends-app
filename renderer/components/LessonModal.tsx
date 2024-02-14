@@ -30,7 +30,7 @@ export default function LessonModal ({ isOpen, closeModal, onSave }) {
             <Modal isOpen={isOpen} closeModal={handleClose} title="Nova aula">
                 <div>
                     <form className="overflow-auto h-96 p-4" onSubmit={handleSubmit(onSubmit)}>
-                        <SearchStudent setStudent={setUser}/>
+                        <SearchStudent setStudent={setUser} select={null}/>
                         <div className="w-full p-2">
                             <h3 className="font-bold text-lg">Aluno(a): {user?.name}</h3>
                         </div>
