@@ -70,3 +70,9 @@ export interface IStudentWithPhonesAndDebt {
     phones: IPhone[];
     debtAmount: number;
 }
+
+export interface ILectureWithStudentsAndValue {
+    lecture: ILecture;
+    students: IStudent[];
+    value: number;
+  }

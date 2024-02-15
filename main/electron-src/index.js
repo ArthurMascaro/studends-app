@@ -139,6 +139,9 @@ electron_1.ipcMain.on("find-all-lessons", (event) => {
 electron_1.ipcMain.on("find-lesson-by-lecture-id", (event, lectureId) => {
     lessonDAO.findByLectureId(event, lectureId).catch(error => console.error(error));
 });
+electron_1.ipcMain.on("is-lesson-already-scheduled", (event, startAt, endAt) => {
+    lessonDAO.isLessonAlreadyScheduled(event, startAt, endAt).catch(error => console.error(error));
+});
 //Manipuladores de eventos para operações de aulas
 electron_1.ipcMain.on("create-lecture", (event, data) => {
     lectureDAO.create(event, data).catch(error => console.error(error));
@@ -174,4 +177,7 @@ electron_1.ipcMain.on("find-all-lectures-by-student-and-month", (event, month, y
 });
 electron_1.ipcMain.on("get-total-profit-by-month", (event, month, year) => {
     lectureDAO.getTotalProfitByMonth(event, month, year).catch(error => console.error(error));
+});
+electron_1.ipcMain.on("find-lectures-last-ten-months", (event) => {
+    lectureDAO.findLecturesLastTenMonths(event).catch(error => console.error(error));
 });

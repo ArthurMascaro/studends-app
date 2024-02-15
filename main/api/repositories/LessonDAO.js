@@ -75,5 +75,42 @@ class LessonDAO {
             event.reply("find-lesson-by-lecture-id-error", error.message);
         }
     }
+    async isLessonAlreadyScheduled(event, startAt, endAt) {
+        try {
+            const existingLesson = await this.prisma.lesson.findFirst({
+                where: {
+                    OR: [
+                        {
+                            AND: [
+                                { startAt: { lte: startAt } },
+                                { endAt: { gte: startAt } },
+                            ],
+                        },
+                        {
+                            AND: [
+                                { startAt: { lte: endAt } },
+                                { endAt: { gte: endAt } },
+                            ],
+                        },
+                        {
+                            AND: [
+                                { startAt: { gte: startAt } },
+                                { endAt: { lte: endAt } },
+                            ],
+                        },
+                    ],
+                },
+            });
+            if (existingLesson) {
+                return event.reply("lesson-already-scheduled", "A lesson is already scheduled during this time.");
+            }
+            else {
+                return event.reply("lesson-not-scheduled", "No lesson is scheduled during this time.");
+            }
+        }
+        catch (error) {
+            return event.reply("lesson-scheduling-error", error.message);
+        }
+    }
 }
 exports.default = LessonDAO;

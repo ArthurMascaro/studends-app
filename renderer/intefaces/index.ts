@@ -26,11 +26,11 @@ export interface EditLecture {
 
 declare global {
     interface Window {
-      main: {
-            sayHello: () => void;
-          receiveHello: (handler: (event, args) => void) => void;
-          stopReceivingHello: (handler: (event, args) => void) => void;
-      };
+      	main: {
+            send: (channel: string, ...args: any[]) => void;
+          	receive: (channel: string, handler: (event, args) => void) => void;
+          	stop: (channel: string) => void;
+      	};
     }
 }
 

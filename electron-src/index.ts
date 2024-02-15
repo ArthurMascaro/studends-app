@@ -179,6 +179,10 @@ ipcMain.on("find-lesson-by-lecture-id", (event, lectureId) => {
 	lessonDAO.findByLectureId(event, lectureId).catch(error => console.error(error));
 });
 
+ipcMain.on("is-lesson-already-scheduled", (event, startAt, endAt) => {
+	lessonDAO.isLessonAlreadyScheduled(event, startAt, endAt).catch(error => console.error(error));
+});
+
 
 
 //Manipuladores de eventos para operações de aulas
@@ -227,4 +231,8 @@ ipcMain.on("find-all-lectures-by-student-and-month", (event, month, year, user_c
 
 ipcMain.on("get-total-profit-by-month", (event, month, year) => {
 	lectureDAO.getTotalProfitByMonth(event, month, year).catch(error => console.error(error));
+});
+
+ipcMain.on("find-lectures-last-ten-months", (event) => {
+	lectureDAO.findLecturesLastTenMonths(event).catch(error => console.error(error));
 });

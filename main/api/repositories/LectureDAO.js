@@ -62,10 +62,9 @@ class LectureDAO {
         try {
             const currentDate = new Date();
             const startDate = new Date(currentDate);
-            console.log(currentDate, startDate);
-            startDate.setDate(startDate.getDate() - startDate.getDay());
+            startDate.setDate(startDate.getDate() - (startDate.getDay() + 6) % 7); // Domingo
             const endDate = new Date(startDate);
-            endDate.setDate(endDate.getDate() + 6);
+            endDate.setDate(endDate.getDate() + 6); // Sábado
             const lecturesByDay = {};
             for (let i = 0; i < 7; i++) {
                 const currentDate = new Date(startDate);

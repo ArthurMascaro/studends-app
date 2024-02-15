@@ -5,6 +5,10 @@ interface AddStudentProps {
     phones: string[]
 }
 
+export const grades = [{ value: "E.F.", text: "E.F." }, { value: "E.M.", text: "E.M." }];
+
+export const years = Array.from({ length: 10 }, (_, i) => ({ value: `${i}°`, text: `${i}°` }));
+
 function joinGrades (year: string, type: string) {
     return `${year} Ano ${type}`;
 }
@@ -13,6 +17,18 @@ function splitGrades (grade: string) {
     const [gradeYear, gradeType] = grade.split(" Ano ");
 
     return { gradeType, gradeYear };
+}
+
+export function splitPhones (phones: Phone[]) {
+    let result = ["", ""];
+
+    for (let i =0; i < 2; i++) {
+        if (phones[i] && phones[i].number) {
+            result[i] = phones[i].number;
+        }
+    }
+
+    return result;
 }
 
 function createStudentPayload (student: User) {
@@ -33,10 +49,12 @@ async function addPhones (phones: Phone[]) {
     }
 }
 
-export async function addStudent ({ student, phones }: AddStudentProps) {
+export async function addStudent (student: User) {
     const studentPayload = createStudentPayload(student);
 
+    const phones = [student.phone1, student.phone2];
     const phonesPayload = [];
+    
     phones.forEach(phone => {
         if (phone.trim().length !== 0) {
             phonesPayload.push({ number: phone, user_cpf: student.cpf });
