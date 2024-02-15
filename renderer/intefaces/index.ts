@@ -23,3 +23,19 @@ export interface EditLecture {
     payed: boolean;
     presence: boolean
 }
+
+declare global {
+    interface Window {
+      main: {
+            sayHello: () => void;
+          receiveHello: (handler: (event, args) => void) => void;
+          stopReceivingHello: (handler: (event, args) => void) => void;
+      };
+    }
+}
+
+export type Phone = {
+  user_cpf: string,
+  number: string,
+  id?: string 
+}

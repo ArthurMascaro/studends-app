@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { ICreateLecture, ILecture } from "../domain/interfaces";
-import dayjs from "dayjs";
 
 class LectureDAO {
   prisma: PrismaClient;

@@ -86,7 +86,6 @@ class LectureDAO {
                 });
                 lecturesByDay[currentDate.toISOString().split("T")[0]] = lectures;
             }
-            console.log(lecturesByDay);
             return event.reply("find-lectures-by-week-success", lecturesByDay);
         }
         catch (error) {
@@ -180,7 +179,7 @@ class LectureDAO {
                 JOIN lessons ls ON l.lesson_id = ls.id
             WHERE
                 l.payed = true
-                AND EXTRACT(MONTH FROM ls.start_at) = ${month}
+                AND EXTRACT(MONTH FROM ls.start_at) = ${month};
                 AND EXTRACT(YEAR FROM ls.start_at) = ${year};
         `;
             return event.reply("get-total-profit-by-month-success", profitByMonth[0].total_profit);

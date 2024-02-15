@@ -743,6 +743,10 @@ video {
   gap: 1.5rem;
 }
 
+.gap-14 {
+  gap: 3.5rem;
+}
+
 .overflow-auto {
   overflow: auto;
 }
@@ -921,6 +925,11 @@ video {
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .text-center {
