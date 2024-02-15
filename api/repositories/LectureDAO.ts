@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { ICreateLecture, ILecture } from "../domain/interfaces";
+import { ICreateLecture, ILecture, ILesson, IStudent, ILectureWithStudentsAndValue } from "../domain/interfaces";
 
 class LectureDAO {
   prisma: PrismaClient;
@@ -64,13 +64,12 @@ class LectureDAO {
     try {
       const currentDate = new Date();
       const startDate = new Date(currentDate);
-      console.log(currentDate, startDate);
-      startDate.setDate(startDate.getDate() - startDate.getDay());
+      startDate.setDate(startDate.getDate() - (startDate.getDay() + 6) % 7); // Domingo
       const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + 6);
-
+      endDate.setDate(endDate.getDate() + 6); // Sábado
+  
       const lecturesByDay: Record<string, ILecture[]> = {};
-
+  
       for (let i = 0; i < 7; i++) {
         const currentDate = new Date(startDate);
         currentDate.setDate(currentDate.getDate() + i);
@@ -90,7 +89,7 @@ class LectureDAO {
         });
         lecturesByDay[currentDate.toISOString().split("T")[0]] = lectures;
       }
-      console.log(lecturesByDay)
+  
       return event.reply("find-lectures-by-week-success", lecturesByDay);
     } catch (error: any) {
       return event.reply("find-lectures-by-week-error", error.message);
@@ -207,6 +206,63 @@ class LectureDAO {
     } catch (error: any) {
         return event.reply("get-total-profit-by-month-error", error.message);
     }
+}
+
+async findLecturesLastTenMonths(event: any): Promise<void> {
+  try {
+    const currentDate = new Date();
+    const tenMonthsAgo = new Date(currentDate);
+    tenMonthsAgo.setMonth(tenMonthsAgo.getMonth() - 10);
+
+    const lectures: ILecture[] = await this.prisma.lecture.findMany({
+      where: {
+        lesson: {
+          startAt: {
+            gte: tenMonthsAgo,
+            lte: currentDate,
+          },
+        },
+      },
+    });
+
+    const lecturesWithStudentsAndValue: ILectureWithStudentsAndValue[] = [];
+
+    for (const lecture of lectures) {
+      const lesson: ILesson | null = await this.prisma.lesson.findUnique({
+        where: {
+          id: lecture.lesson_id,
+        },
+      });
+
+      if (lesson) {
+        const students: IStudent[] = await this.prisma.user.findMany({
+          where: {
+            lectures: {
+              some: {
+                id: lecture.id,
+              },
+            },
+          },
+        });
+
+        lecturesWithStudentsAndValue.push({
+          lecture,
+          students,
+          value: lesson.value,
+        });
+      }
+    }
+
+    return event.reply(
+      "find-lectures-last-ten-months-success",
+      lecturesWithStudentsAndValue
+    );
+  } catch (error: any) {
+    return event.reply(
+      "find-lectures-last-ten-months-error",
+      error.message
+    );
+  }
 }
 }
 
