@@ -25,7 +25,7 @@ export default function DayPlanner ({ lectures }) {
                         return (
                             <div className="w-full my-4 rounded-md" style={{height: 100}}>
                                 {
-                                    lectures.map((lecture) => {
+                                    lectures?.map((lecture) => {
                                         let lessonStart = DateService.getTime(lecture.lesson.startAt);
                                         let lessonEnd = DateService.getTime(lecture.lesson.endAt);
                                         let diff = DateService.timeDiff(lessonEnd, lessonStart);
