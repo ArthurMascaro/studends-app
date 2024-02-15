@@ -1,3 +1,4 @@
+import { sendEvent } from "../../../utils/api";
 import { Phone, User } from "../../intefaces";
 
 interface AddStudentProps {
@@ -41,20 +42,22 @@ function createStudentPayload (student: User) {
     return { name, motherName, bornDate: birthday, cpf, grade, observation};
 }
 
-async function addPhones (phones: Phone[]) {
-    try {
-        return true;
-    } catch {
-        return false;
-    }
-}
 
 export async function addStudent (student: User) {
+    if (!student.phone2) {
+        student.phone2 = "";
+    }
+
+    if (!student.observation) {
+        student.observation = "";
+    }
+
     const studentPayload = createStudentPayload(student);
+    console.log(studentPayload);
 
     const phones = [student.phone1, student.phone2];
     const phonesPayload = [];
-    
+
     phones.forEach(phone => {
         if (phone.trim().length !== 0) {
             phonesPayload.push({ number: phone, user_cpf: student.cpf });
@@ -62,6 +65,23 @@ export async function addStudent (student: User) {
     })
 
     try {
+        await sendEvent("create-user", studentPayload);
+        await sendEvent("create-many-phones", phonesPayload);
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
+export async function updateStudent (student: User, phones: Phone[]) {
+    const studentPayload = createStudentPayload(student);
+
+
+
+    try {
+        await sendEvent("update-user", student.cpf, studentPayload);
+        await sendEvent("update-many-phones", phones);
         return true;
     } catch {
         return false;

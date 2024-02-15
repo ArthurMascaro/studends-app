@@ -187,5 +187,50 @@ class LectureDAO {
             return event.reply("get-total-profit-by-month-error", error.message);
         }
     }
+    async findLecturesLastTenMonths(event) {
+        try {
+            const currentDate = new Date();
+            const tenMonthsAgo = new Date(currentDate);
+            tenMonthsAgo.setMonth(tenMonthsAgo.getMonth() - 10);
+            const lectures = await this.prisma.lecture.findMany({
+                where: {
+                    lesson: {
+                        startAt: {
+                            gte: tenMonthsAgo,
+                            lte: currentDate,
+                        },
+                    },
+                },
+            });
+            const lecturesWithStudentsAndValue = [];
+            for (const lecture of lectures) {
+                const lesson = await this.prisma.lesson.findUnique({
+                    where: {
+                        id: lecture.lesson_id,
+                    },
+                });
+                if (lesson) {
+                    const students = await this.prisma.user.findMany({
+                        where: {
+                            lectures: {
+                                some: {
+                                    id: lecture.id,
+                                },
+                            },
+                        },
+                    });
+                    lecturesWithStudentsAndValue.push({
+                        lecture,
+                        students,
+                        value: lesson.value,
+                    });
+                }
+            }
+            return event.reply("find-lectures-last-ten-months-success", lecturesWithStudentsAndValue);
+        }
+        catch (error) {
+            return event.reply("find-lectures-last-ten-months-error", error.message);
+        }
+    }
 }
 exports.default = LectureDAO;

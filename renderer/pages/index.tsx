@@ -1,44 +1,19 @@
-
-import DateService from "../../utils/DateService";
-import { useEffect, useState } from "react";
-import { useLessonsStore, useStudentsStore, useWeekStore } from "../store";
-import { fetchData } from "../api";
-import DayPlanner from "../components/DayPlanner";
+import { useState } from "react";
 import { Layout } from "../components/Layout";
-
+import { getFullWeek, today } from "../../utils/date";
 
 export default function Index () {
 
-	const setStudents = useStudentsStore((state: any) => state.setStudents);
-	const students = useStudentsStore((state: any) => state.students);
-
-	const setWeek = useWeekStore((state: any) => state.setWeek);
-	const days = useWeekStore((state: any) => state.days);
-
-	const setLessons = useLessonsStore((state: any) => state.setLessons);
-
 	const [loading, setLoading] = useState(true);
 
-	const week = DateService.getFullWeek();
-	const today = DateService.today();
+	const week = getFullWeek();
 
 	const [activeDay, setActiveDay] = useState(week[today.day()].date);
-
-	const [dayLectures, setDayLectures] = useState([])
 
 	const handleSelectDay = (item) => {
 		const { date } = item;
 		setActiveDay(week[date.day()].date);
-		setDayLectures(days[DateService.toInputDate(date)]);
 	}
-
-	useEffect(() => {
-		fetchData(setStudents, setWeek, setLessons, null);
-		if (students && days) {
-			setDayLectures(days[DateService.toInputDate(activeDay)]);
-			setLoading(false);
-		}
-	}, [])
 
 	return (
 		<Layout.Root>
@@ -54,30 +29,7 @@ export default function Index () {
 				</div>
 			</Layout.Header>
 			<Layout.Content>
-				<div className="flex h-full flex-col items-center">
-					<div className="flex gap-6 rounded-md bg-white shadow-md w-fit">
-						{
-							week.map((item, index) => {
-								return (
-									<div style={{ userSelect: "none" }} onClick={() => handleSelectDay(item)} key={index} className={`${item.date.isSame(activeDay) ? "border-b-2 border-b-darkBlue" : ""} m-2 p-1 hover:bg-slate-400`}>
-										<h2 className="text-lg font-bold text-darkBlue">{item.date.format("DD")} - {item.day}</h2>
-									</div>
-								)
-							})
-						}
-					</div>
-					<div className="flex flex-row w-full my-5 h-full justify-center">
-						{
-							loading ?
-								<p>Carregando...</p>
-							:
-								dayLectures?.length === 0 ?
-									<h1>Sem aulas por hoje! Aproveite o dia!</h1>
-								:
-									<DayPlanner lectures={dayLectures}/>
-						}
-					</div>
-				</div>
+				<h1>Conteudo</h1>
 			</Layout.Content>
 		</Layout.Root>
 	)

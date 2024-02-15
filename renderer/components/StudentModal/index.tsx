@@ -1,29 +1,43 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Modal } from "../Modal";
 import { Phone, User } from "../../intefaces";
 import { useForm } from "react-hook-form";
 import Field from "../Field";
 import Select from "../Select";
 import TextArea from "../TextArea";
-import { addStudent, grades, splitPhones, years } from "./actions";
+import { addStudent, grades, splitPhones, updateStudent, years } from "./actions";
+import { toast } from "react-hot-toast";
 
 interface StudentModalProps {
+    isOpen: boolean,
+    setOpen: Dispatch<SetStateAction<Boolean>>,
     student: User | null
     phones: Phone[] | null
 }
 
-export default function StudentModal ({ student, phones }: StudentModalProps) {
+export default function StudentModal ({ isOpen, setOpen, student, phones }: StudentModalProps) {
 
-    const [isOpen, setOpen] = useState(false);
     const [action, setAction] = useState("create");
 
     const { control, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<User>();
 
     async function onSubmit (data: User) {
         if (action === "create") {
-            await addStudent(student);
+            let result = await addStudent(data);
+            if (result) {
+                toast.success("Aluno cadastrado");
+                handleClose();
+            } else {
+                toast.error("Algo deu errado");
+            }
         } else if (action === "update") {
-            
+            let result = await updateStudent(data, phones);
+            if (result) {
+                toast.success("Dados atualizados");
+                handleClose();
+            } else {
+                toast.error("Algo deu errado");
+            }
         }
     }
 
@@ -78,7 +92,6 @@ export default function StudentModal ({ student, phones }: StudentModalProps) {
                     </form>
                 </Modal.Content>
             </Modal.Root>
-            <div onClick={() => setOpen(!isOpen)}>Abrir Modal</div>
         </div>
     )
 }

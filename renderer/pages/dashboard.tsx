@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Layout } from "../components/Layout"
 import Chart from "react-apexcharts";
-import { sendEvent } from "../api";
+import { sendEvent } from "../../utils/api";
 import { toast } from "react-hot-toast";
 
 const MoneyChart = ({ data }) => {

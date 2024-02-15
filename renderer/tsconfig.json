@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../next.config.js", "../utils/dayjs.config.ts", "../utils/DateService.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../next.config.js", "../utils/dayjs.config.ts", "../utils/DateService.ts", "../utils/api.ts"],
   "exclude": ["node_modules"]
 }

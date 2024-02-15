@@ -1,11 +1,10 @@
 import { AlertTriangle, Check, User } from "lucide-react";
 import { Layout } from "../components/Layout";
 import { useEffect, useState } from "react";
-import DateService from "../../utils/DateService";
 import StudentModal from "../components/StudentModal";
 import { useStudentsStore } from "../store";
 import { toast } from "react-hot-toast";
-import { fetchData, sendEvent } from "../api";
+import { fetchData, sendEvent } from "../../utils/api";
 
 const FindUsers = () => {
     return (
@@ -26,41 +25,7 @@ const FindUsers = () => {
     )
 }
 
-const handleEditUser = async (data, phones, setStudents) => {
-    let { name, motherName, cpf, bornDate, gradeType, gradeYear, observation, phone1, phone2 } = data;
-
-    bornDate = new Date(bornDate).toISOString();
-
-    const grade = `${gradeYear} Ano ${gradeType}`;
-
-    const studentPayload = { name, motherName, cpf, bornDate, grade, observation };
-
-    phones[0].number = phone1;
-    let phonesPayload = [phones[0]];
-    if (phone2 && phone2.length !== 0) {
-        if (phones[1]) {
-            phones[1].number = phone2;
-            phonesPayload.push(phones[1]);
-        } else {
-            sendEvent("create-phone", { user_cpf: cpf, number: phone2 });
-        }
-    }
-
-    try {
-        await sendEvent("update-user", cpf, studentPayload);
-        try {
-            await sendEvent("update-many-phones", phonesPayload);
-            toast.success("Dados atualizados");
-        } catch (error) {
-            toast.error("Algo deu errado");
-        } 
-    } catch (error) {
-        toast.error("Algo deu errado");
-    }
-
-    fetchData(setStudents, null, null, null);
-}
-
+/*
 const StudentCard = ({ data }) => {
 
     let { student, phones, debtAmount } = data;
@@ -130,61 +95,40 @@ const StudentCard = ({ data }) => {
                     
                 </div>
             </div>
-                <StudentModal onSave={onEditUser} isOpen={open} closeModal={handleClose} phones={phones} student={student}/>
+                <StudentModal  isOpen={open} setOpen={setOpen} phones={phones} student={student}/>
         </div>
     )
-}
+}*/
 
 export default function Students () {
 
-    const students = useStudentsStore((state: any) => state.students);
-    const setStudents = useStudentsStore((state: any) => state.setStudents);
-
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetchData(setStudents, null, null, null);
-        if (students) {
-            setLoading(false);
-        }
-    }, [])
+    const [students, setStudents] = useState([]);
+    const [isOpen, setOpen] = useState(false);
 
 	return (
 		<Layout.Root>
             <Layout.Header>
                 <FindUsers/>
                 <div>
+                        <div onClick={() => setOpen(true)}>clica</div>
+                        <StudentModal isOpen={isOpen} setOpen={setOpen} student={null} phones={null}/>
+                    </div>
+                <div className="flex">
                     <div className="bg-primaryBlue rounded-lg py-2 px-4 shadow-xl">
                         {
                             loading ? 
                                 <p>Carregando...</p>
                             :
-                                <h1 className="text-white text-xl font-bold">{students.length} Alunos cadastrados</h1>
+                                <h1 className="text-white text-xl font-bold">{students?.length} Alunos cadastrados</h1>
                         }
                     </div>
                 </div>
             </Layout.Header>
 			<Layout.Content>
-                <div className="flex h-full flex-col items-center justify-center">
-                    { 
-                        loading ?
-                            <p>Carregando...</p>
-                        :
-                            <div className="flex flex-col w-11/12 overflow-y-auto">
-                                {
-                                    students.length === 0 ?
-                                        <h2>Nenhum aluno encontrado</h2>
-                                    :
-                                        
-                                        students.map((student, index) => {
-                                            return (
-                                                <StudentCard data={student} key={index}/>
-                                            )
-                                        })
-                                }
-                            </div>
-                    }
-				</div>
+                <div>
+                    <h1>Conteúdo</h1>
+                </div>
             </Layout.Content>
 		</Layout.Root>
 	)

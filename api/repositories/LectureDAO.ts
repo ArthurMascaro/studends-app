@@ -89,10 +89,7 @@ class LectureDAO {
         });
         lecturesByDay[currentDate.toISOString().split("T")[0]] = lectures;
       }
-<<<<<<< HEAD
-=======
   
->>>>>>> e330dd581b962203cf5d9d73d1fdbf6087dea123
       return event.reply("find-lectures-by-week-success", lecturesByDay);
     } catch (error: any) {
       return event.reply("find-lectures-by-week-error", error.message);
@@ -209,9 +206,6 @@ class LectureDAO {
     } catch (error: any) {
         return event.reply("get-total-profit-by-month-error", error.message);
     }
-<<<<<<< HEAD
-  }
-=======
 }
 
 async findLecturesLastTenMonths(event: any): Promise<void> {
@@ -270,7 +264,6 @@ async findLecturesLastTenMonths(event: any): Promise<void> {
     );
   }
 }
->>>>>>> e330dd581b962203cf5d9d73d1fdbf6087dea123
 }
 
 export default LectureDAO;
