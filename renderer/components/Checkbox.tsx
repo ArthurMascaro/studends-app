@@ -6,7 +6,6 @@ export default function Checkbox ({ name, checked, control,  label, error, ...ar
         <Controller
             name={name}
             defaultValue={checked}
-            rules={{required: true}}
             control={control}
             render={({ field: { value, onChange } }) => {
                 return (

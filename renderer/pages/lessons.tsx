@@ -28,6 +28,7 @@ const handleAddLesson = async (data, setLessons, setLectures) => {
             try {
                 await sendEvent("create-lecture", { user_cpf: cpf, lesson_id: id, payed, presence });
                 toast.success("Aula criada");
+                fetchData(null, null, setLessons, setLectures);
             } catch (error) {
                 toast.error("Algo deu errado");
             }
@@ -37,8 +38,24 @@ const handleAddLesson = async (data, setLessons, setLectures) => {
     }
 }
 
-const handleEditLecture = (data, setLessons, setLectures) => {
-    const { newStudent, newLesson, newLecture } = data;
+const handleEditLecture = async (data, setLessons, setLectures) => {
+    let { newLesson, newLecture } = data;
+
+    newLesson.startAt = new Date(newLesson.startAt).toISOString();
+    newLesson.endAt = new Date(newLesson.endAt).toISOString();
+
+    try {
+        await sendEvent("update-lesson", newLesson.id, newLesson);
+        try {
+            await sendEvent("update-lecture", newLecture.id, newLecture);
+            toast.success("Dados alterados");
+            fetchData(null, null, setLessons, setLectures);
+        } catch (error) {
+            toast.error("Algo deu errado");
+        }
+    } catch (error) {
+        toast.error("Algo deu errado");
+    }
 }
 
 const LectureCard = ({ lecture }) => {
@@ -77,7 +94,7 @@ const LectureCard = ({ lecture }) => {
         }
     }
 
-    const data = { lecture, lesson, student }
+    const data = { lecture, lesson, student };
 
     return (
         <div>
