@@ -1,7 +1,5 @@
 import { AlertTriangle, Check, User } from "lucide-react";
-import Content from "../components/Content";
-import Header from "../components/Header";
-import Layout from "../components/Layout";
+import { Layout } from "../components/Layout";
 import { useEffect, useState } from "react";
 import DateService from "../../utils/DateService";
 import StudentModal from "../components/StudentModal";
@@ -37,11 +35,15 @@ const handleEditUser = async (data, phones, setStudents) => {
 
     const studentPayload = { name, motherName, cpf, bornDate, grade, observation };
 
-    phones[0].number = phone1
+    phones[0].number = phone1;
     let phonesPayload = [phones[0]];
     if (phone2 && phone2.length !== 0) {
-        phones[1].number = phone2;
-        phonesPayload.push(phones[1]);
+        if (phones[1]) {
+            phones[1].number = phone2;
+            phonesPayload.push(phones[1]);
+        } else {
+            sendEvent("create-phone", { user_cpf: cpf, number: phone2 });
+        }
     }
 
     try {
@@ -106,9 +108,26 @@ const StudentCard = ({ data }) => {
                             <h1 className="text-white text-lg font-bold">{age} - {student.grade}</h1>
                         </div>
                     </div>
-                    <div className="px-2 py-3">
-                        <h2>Telefone(s): {phones[0] ? phones[0].number : ""} {phones[1] ? phones[1].number : ""}</h2>
+                    <div className="flex px-2 py-3 gap-10 items-center">
+                        <div className="flex gap-6">
+                            <h2 className="font-bold text-darkBlue">Telefone: {phones[0]?.number}</h2>
+                            {
+                                phones[1] ?
+                                    <h2 className="font-bold text-darkBlue">Telefone: {phones[1]?.number}</h2>
+                                :
+                                    <></>
+                            }
+                        </div>
+                        {
+                                debtAmount > 0 ?
+                                    <div>
+                                        <h1 className="font-bold text-xl text-slate-900">Em dívida: R$ {debtAmount}</h1>
+                                    </div>
+                                :
+                                    <></>
+                            }
                     </div>
+                    
                 </div>
             </div>
                 <StudentModal onSave={onEditUser} isOpen={open} closeModal={handleClose} phones={phones} student={student}/>
@@ -131,8 +150,8 @@ export default function Students () {
     }, [])
 
 	return (
-		<Layout>
-            <Header>
+		<Layout.Root>
+            <Layout.Header>
                 <FindUsers/>
                 <div>
                     <div className="bg-primaryBlue rounded-lg py-2 px-4 shadow-xl">
@@ -144,8 +163,8 @@ export default function Students () {
                         }
                     </div>
                 </div>
-            </Header>
-			<Content>
+            </Layout.Header>
+			<Layout.Content>
                 <div className="flex h-full flex-col items-center justify-center">
                     { 
                         loading ?
@@ -166,7 +185,7 @@ export default function Students () {
                             </div>
                     }
 				</div>
-            </Content>
-		</Layout>
+            </Layout.Content>
+		</Layout.Root>
 	)
 }

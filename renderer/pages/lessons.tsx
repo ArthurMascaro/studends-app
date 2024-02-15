@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import Content from "../components/Content"
-import Header from "../components/Header"
-import Layout from "../components/Layout"
+import { Layout } from "../components/Layout"
 import LessonModal from "../components/LessonModal";
 import { useLecturesStore, useLessonsStore, useStudentsStore } from "../store";
 import { CheckCircle, XCircle } from "lucide-react";
@@ -155,11 +153,11 @@ export default function Lessons () {
     }, [])
 
     return (
-        <Layout>
-            <Header>
+        <Layout.Root>
+            <Layout.Header>
                 <h1>Lessons</h1>
-            </Header>
-            <Content>
+            </Layout.Header>
+            <Layout.Content>
                 <div className="flex h-full flex-col items-center justify-center">
                     <div className="m-2">
                         <div onClick={() => setOpen(!open)}>
@@ -188,7 +186,7 @@ export default function Lessons () {
                         }
                     </div>
 				</div>
-            </Content>
-        </Layout>
+            </Layout.Content>
+        </Layout.Root>
     )
 }

@@ -15,7 +15,6 @@ export const useLecturesStore = create((set) => ({
     setLectures: (lectures) => set((state) => ({ lectures: lectures }))
 }))
 
-
 export const useWeekStore = create((set) => ({
     days: [],
     setWeek: (days) => set((state) => ({ days: days }))

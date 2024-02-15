@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { ICreateLecture, ILecture } from "../domain/interfaces";
+import dayjs from "dayjs";
 
 class LectureDAO {
   prisma: PrismaClient;
@@ -90,7 +91,6 @@ class LectureDAO {
         });
         lecturesByDay[currentDate.toISOString().split("T")[0]] = lectures;
       }
-      console.log(lecturesByDay)
       return event.reply("find-lectures-by-week-success", lecturesByDay);
     } catch (error: any) {
       return event.reply("find-lectures-by-week-error", error.message);
@@ -199,7 +199,7 @@ class LectureDAO {
                 JOIN lessons ls ON l.lesson_id = ls.id
             WHERE
                 l.payed = true
-                AND EXTRACT(MONTH FROM ls.start_at) = ${month}
+                AND EXTRACT(MONTH FROM ls.start_at) = ${month};
                 AND EXTRACT(YEAR FROM ls.start_at) = ${year};
         `;
 
@@ -207,7 +207,7 @@ class LectureDAO {
     } catch (error: any) {
         return event.reply("get-total-profit-by-month-error", error.message);
     }
-}
+  }
 }
 
 export default LectureDAO;

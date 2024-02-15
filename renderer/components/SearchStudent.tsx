@@ -11,10 +11,10 @@ export default function SearchStudent ({ setStudent, select }) {
     const input = useRef(null)
 
     const handleChange = () => {
-        let name = input.current.value.trim().toLowerCase();
+        let value = input.current.value.trim().toLowerCase();
 
-        if (name.length !== 0) {
-            setResults(students.filter((data) => data.student.name.toLowerCase().includes(name)));
+        if (value.length !== 0) {
+            setResults(students.filter((data) => data.student.name.toLowerCase().includes(value)));
         } else {
             setResults(null);
         }

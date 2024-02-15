@@ -1,8 +1,8 @@
-import { useState } from "react";
-import Content from "../components/Content"
-import Header from "../components/Header"
-import Layout from "../components/Layout"
+import { useEffect, useState } from "react";
+import { Layout } from "../components/Layout"
 import Chart from "react-apexcharts";
+import { sendEvent } from "../api";
+import { toast } from "react-hot-toast";
 
 const MoneyChart = ({ data }) => {
 
@@ -58,7 +58,7 @@ const MoneyTable = ({ data }) => {
 export default function Dashboard () {
 
     const [data, setData] = useState(true);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true);
 
     const tabs = ["table", "chart"];
 
@@ -68,12 +68,28 @@ export default function Dashboard () {
         setTab(item);
     }
 
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const result: any = await sendEvent("get-total-profit-by-month", 2, 2024);
+                setData(result);
+                setLoading(false)
+            } catch (error) {
+                console.log(error)
+                toast.error("Algo deu errado")
+            }
+        }
+
+        fetch()
+    }, [])
+
+
     return (
-        <Layout>
-            <Header>
+        <Layout.Root>
+            <Layout.Header>
                 <h1 className="text-3xl font-bold text-darkBlue">Resultados Financeiros</h1>
-            </Header>
-            <Content>
+            </Layout.Header>
+            <Layout.Content>
                 <div className="flex h-full flex-col items-center">
                     <div className="flex gap-6 rounded-md bg-white shadow-md w-fit">
                         {
@@ -109,7 +125,7 @@ export default function Dashboard () {
                         </div>
                     </div>
                 </div>
-            </Content>
-        </Layout>
+            </Layout.Content>
+        </Layout.Root>
     )
 }

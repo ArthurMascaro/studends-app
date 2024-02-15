@@ -1,12 +1,10 @@
-import Content from "../components/Content";
-import Header from "../components/Header";
-import Layout from "../components/Layout";
 
 import DateService from "../../utils/DateService";
 import { useEffect, useState } from "react";
 import { useLessonsStore, useStudentsStore, useWeekStore } from "../store";
 import { fetchData } from "../api";
 import DayPlanner from "../components/DayPlanner";
+import { Layout } from "../components/Layout";
 
 
 export default function Index () {
@@ -43,8 +41,8 @@ export default function Index () {
 	}, [])
 
 	return (
-		<Layout>
-			<Header>
+		<Layout.Root>
+			<Layout.Header>
 				<div>
 					<h1 className="text-darkBlue text-3xl font-bold">Calendário de Aulas</h1>
 					<h2 className="text-darkBlue text-lg font-bold">Semana de {week[0].date.format("DD/MM/YYYY")} - {week[6].date.format("DD/MM/YYYY")}</h2>
@@ -54,8 +52,8 @@ export default function Index () {
 						<h1 className="text-white text-xl font-bold">4 Alulas em {activeDay.format("DD/MM")}</h1>
 					</div>
 				</div>
-			</Header>
-			<Content>
+			</Layout.Header>
+			<Layout.Content>
 				<div className="flex h-full flex-col items-center">
 					<div className="flex gap-6 rounded-md bg-white shadow-md w-fit">
 						{
@@ -80,7 +78,7 @@ export default function Index () {
 						}
 					</div>
 				</div>
-			</Content>
-		</Layout>
+			</Layout.Content>
+		</Layout.Root>
 	)
 }
