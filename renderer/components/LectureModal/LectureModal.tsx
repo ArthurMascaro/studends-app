@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import Modal from "./Modal";
-import { EditLecture } from "../intefaces";
+import Modal from "../Modal";
+import { EditLecture } from "../../intefaces";
 import { useForm } from "react-hook-form";
-import { useLessonsStore, useStudentsStore } from "../store";
-import SearchStudent from "./SearchStudent";
-import Field from "./Field";
+import { useLessonsStore, useStudentsStore } from "../../store";
+import SearchStudent from "../SearchStudent";
+import Field from "../Field";
 import DateService from "../../utils/DateService";
-import Checkbox from "./Checkbox";
+import Checkbox from "../Checkbox";
 
 export default function LectureModal ({ isOpen, closeModal, onSave, data }) {
 

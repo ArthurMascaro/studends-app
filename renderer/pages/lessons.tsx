@@ -3,7 +3,7 @@ import { Layout } from "../components/Layout"
 import LessonModal from "../components/LessonModal";
 import { useLecturesStore, useLessonsStore, useStudentsStore } from "../store";
 import { CheckCircle, XCircle } from "lucide-react";
-import LectureModal from "../components/LectureModal";
+import LectureModal from "../components/LectureModal/LectureModal";
 import { toast } from "react-hot-toast";
 import { fetchData, sendEvent } from "../../utils/api";
 import DateService from "../../utils/DateService";

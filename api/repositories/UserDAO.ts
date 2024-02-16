@@ -16,7 +16,6 @@ class UserDAO {
   }
 
   async create(event: any, data: ICreateStudent) {
-    console.log("avsvasvzvxz");
     try {
       const result = await this.prisma.user.create({ data });
       return event.reply("create-user-success", result);
@@ -145,10 +144,42 @@ class UserDAO {
 
   async findUserByName(event: any, name: string) {
     try {
-      const result: IStudent[] = await this.prisma.user.findMany({
-        where: { name },
+      const students: IStudent[] = await this.prisma.user.findMany({
+        where: { name: { contains: name } },
       });
-      return event.reply("find-users-by-name-success", result);
+
+      const studentsWithPhonesAndDebt: IStudentWithPhonesAndDebt[] = [];
+
+      for (const student of students) {
+        const phones: IPhone[] = await this.prisma.phone.findMany({
+          where: { user_cpf: student.cpf },
+        });
+
+        const unpaidLectures: ILecture[] = await this.prisma.lecture.findMany({
+          where: { user_cpf: student.cpf, payed: false },
+            include: { lesson: true },
+        });
+
+        let debtAmount: number = 0;
+
+        for (const lecture of unpaidLectures) {
+          const lesson = await this.prisma.lesson.findUnique({
+            where: { id: lecture.lesson_id },
+          });
+
+          if (lesson) {
+            debtAmount += lesson.value;
+            }
+        }
+
+        studentsWithPhonesAndDebt.push({
+          student,
+          phones,
+          debtAmount,
+        });
+      }
+      
+      return event.reply("find-users-by-name-success", studentsWithPhonesAndDebt);
     } catch (error: any) {
       return event.reply("find-users-by-name-error", error.message);
     }
@@ -167,12 +198,45 @@ class UserDAO {
 
   async findUserByMotherName(event: any, motherName: string) {
     try {
-      const result: IStudent[] = await this.prisma.user.findMany({
-        where: { motherName },
+      const students: IStudent[] = await this.prisma.user.findMany({
+        where: { motherName: { contains: motherName } },
       });
-      return event.reply("find-users-by-motherName-success", result);
+
+      const studentsWithPhonesAndDebt: IStudentWithPhonesAndDebt[] = [];
+
+      for (const student of students) {
+        const phones: IPhone[] = await this.prisma.phone.findMany({
+          where: { user_cpf: student.cpf },
+        });
+
+        const unpaidLectures: ILecture[] = await this.prisma.lecture.findMany({
+          where: { user_cpf: student.cpf, payed: false },
+          include: { lesson: true },
+        });
+
+        let debtAmount: number = 0;
+
+        for (const lecture of unpaidLectures) {
+          const lesson = await this.prisma.lesson.findUnique({
+            where: { id: lecture.lesson_id },
+          });
+
+          if (lesson) {
+            debtAmount += lesson.value;
+          }
+        }
+
+        studentsWithPhonesAndDebt.push({
+          student,
+          phones,
+          debtAmount,
+        });
+      }
+
+
+      return event.reply("find-users-by-mother-name-success", studentsWithPhonesAndDebt);
     } catch (error: any) {
-      return event.reply("find-users-by-motherName-error", error.message);
+      return event.reply("find-users-by-mother-name-error", error.message);
     }
   }
 
@@ -447,7 +511,7 @@ class UserDAO {
     } catch (error: any) {
         return event.reply("find-all-students-with-phones-and-debt-error", error.message);
     }
-}
+  }
 }
 
 export default UserDAO;

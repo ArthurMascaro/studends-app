@@ -136,10 +136,34 @@ class UserDAO {
     }
     async findUserByName(event, name) {
         try {
-            const result = await this.prisma.user.findMany({
-                where: { name },
+            const students = await this.prisma.user.findMany({
+                where: { name: { contains: name } },
             });
-            return event.reply("find-users-by-name-success", result);
+            const studentsWithPhonesAndDebt = [];
+            for (const student of students) {
+                const phones = await this.prisma.phone.findMany({
+                    where: { user_cpf: student.cpf },
+                });
+                const unpaidLectures = await this.prisma.lecture.findMany({
+                    where: { user_cpf: student.cpf, payed: false },
+                    include: { lesson: true },
+                });
+                let debtAmount = 0;
+                for (const lecture of unpaidLectures) {
+                    const lesson = await this.prisma.lesson.findUnique({
+                        where: { id: lecture.lesson_id },
+                    });
+                    if (lesson) {
+                        debtAmount += lesson.value;
+                    }
+                }
+                studentsWithPhonesAndDebt.push({
+                    student,
+                    phones,
+                    debtAmount,
+                });
+            }
+            return event.reply("find-users-by-name-success", studentsWithPhonesAndDebt);
         }
         catch (error) {
             return event.reply("find-users-by-name-error", error.message);
@@ -158,13 +182,37 @@ class UserDAO {
     }
     async findUserByMotherName(event, motherName) {
         try {
-            const result = await this.prisma.user.findMany({
-                where: { motherName },
+            const students = await this.prisma.user.findMany({
+                where: { motherName: { contains: motherName } },
             });
-            return event.reply("find-users-by-motherName-success", result);
+            const studentsWithPhonesAndDebt = [];
+            for (const student of students) {
+                const phones = await this.prisma.phone.findMany({
+                    where: { user_cpf: student.cpf },
+                });
+                const unpaidLectures = await this.prisma.lecture.findMany({
+                    where: { user_cpf: student.cpf, payed: false },
+                    include: { lesson: true },
+                });
+                let debtAmount = 0;
+                for (const lecture of unpaidLectures) {
+                    const lesson = await this.prisma.lesson.findUnique({
+                        where: { id: lecture.lesson_id },
+                    });
+                    if (lesson) {
+                        debtAmount += lesson.value;
+                    }
+                }
+                studentsWithPhonesAndDebt.push({
+                    student,
+                    phones,
+                    debtAmount,
+                });
+            }
+            return event.reply("find-users-by-mother-name-success", studentsWithPhonesAndDebt);
         }
         catch (error) {
-            return event.reply("find-users-by-motherName-error", error.message);
+            return event.reply("find-users-by-mother-name-error", error.message);
         }
     }
     async findUserByPhone(event, phone) {

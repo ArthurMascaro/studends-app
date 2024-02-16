@@ -2,28 +2,8 @@ import { AlertTriangle, Check, User } from "lucide-react";
 import { Layout } from "../components/Layout";
 import { useEffect, useState } from "react";
 import StudentModal from "../components/StudentModal";
-import { useStudentsStore } from "../store";
-import { toast } from "react-hot-toast";
-import { fetchData, sendEvent } from "../../utils/api";
+import StudentSearch from "../components/StudentSearch/StudentSearch";
 
-const FindUsers = () => {
-    return (
-        <div className="flex">
-            <div className="px-5 flex flex-row">
-                <select className="bg-darkBlue h-12 rounded-tl-md rounded-bl-md text-white font-bold text-center">
-                   <option value="">Teste</option>
-                </select>
-                <input 
-                    placeholder="oiii"
-                    className="border-2 border-darkBlue h-12 p-3 w-96 rounded-tr-md rounded-br-md text-slate-700 placeholder-slate-700 font-bold shadow-xl"
-                />
-            </div>
-            <button className="bg-darkBlue rounded-md py-2 px-4 shadow-xl">
-                <h1 className="text-white text-xl font-bold">Buscar</h1>
-            </button>
-        </div>
-    )
-}
 
 /*
 const StudentCard = ({ data }) => {
@@ -105,13 +85,14 @@ export default function Students () {
     const [loading, setLoading] = useState(true);
     const [students, setStudents] = useState([]);
     const [isOpen, setOpen] = useState(false);
+    const [selected, setSelected] = useState([]);
 
 	return (
 		<Layout.Root>
             <Layout.Header>
-                <FindUsers/>
+                <StudentSearch setSearchResults={setSelected} selector/>
                 <div>
-                        <div onClick={() => setOpen(true)}>clica</div>
+                        <button onClick={() => setOpen(true)}>clica</button>
                         <StudentModal isOpen={isOpen} setOpen={setOpen} student={null} phones={null}/>
                     </div>
                 <div className="flex">

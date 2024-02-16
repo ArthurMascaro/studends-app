@@ -8,7 +8,7 @@ interface AddStudentProps {
 
 export const grades = [{ value: "E.F.", text: "E.F." }, { value: "E.M.", text: "E.M." }];
 
-export const years = Array.from({ length: 10 }, (_, i) => ({ value: `${i}°`, text: `${i}°` }));
+export const years = Array.from({ length: 9 }, (_, i) => ({ value: `${i+1}°`, text: `${i+1}°` }));
 
 function joinGrades (year: string, type: string) {
     return `${year} Ano ${type}`;
@@ -53,7 +53,6 @@ export async function addStudent (student: User) {
     }
 
     const studentPayload = createStudentPayload(student);
-    console.log(studentPayload);
 
     const phones = [student.phone1, student.phone2];
     const phonesPayload = [];
@@ -69,7 +68,7 @@ export async function addStudent (student: User) {
         await sendEvent("create-many-phones", phonesPayload);
         return true;
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return false;
     }
 }
@@ -77,7 +76,7 @@ export async function addStudent (student: User) {
 export async function updateStudent (student: User, phones: Phone[]) {
     const studentPayload = createStudentPayload(student);
 
-
+    console.log(studentPayload, phones);
 
     try {
         await sendEvent("update-user", student.cpf, studentPayload);

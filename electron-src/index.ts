@@ -74,23 +74,23 @@ ipcMain.on("find-all-users", (event) => {
     userDAO.findAll(event).catch(error => console.error(error));
 });
 
-ipcMain.on("find-user-by-name", (event, name) => {
+ipcMain.on("find-users-by-name", (event, name) => {
 	userDAO.findUserByName(event, name).catch(error => console.error(error));
 });
 
-ipcMain.on("find-user-by-mother-name", (event, motherName) => {
+ipcMain.on("find-users-by-mother-name", (event, motherName) => {
 	userDAO.findUserByMotherName(event, motherName).catch(error => console.error(error));
 });
 
-ipcMain.on("find-user-by-grade", (event, grade) => {
+ipcMain.on("find-users-by-grade", (event, grade) => {
 	userDAO.findByGrade(event, grade).catch(error => console.error(error));
 });
 
-ipcMain.on("find-user-by-phone", (event, phone) => {
+ipcMain.on("find-users-by-phone", (event, phone) => {
 	userDAO.findUserByPhone(event, phone).catch(error => console.error(error));
 });
 
-ipcMain.on("find-user-by-born-date", (event, bornDate) => {
+ipcMain.on("find-users-by-born-date", (event, bornDate) => {
 	userDAO.findByBornDate(event, bornDate).catch(error => console.error(error));
 });
 
