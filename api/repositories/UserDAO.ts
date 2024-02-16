@@ -146,6 +146,7 @@ class UserDAO {
     try {
       const students: IStudent[] = await this.prisma.user.findMany({
         where: { name: { contains: name } },
+        orderBy: { name: "asc" }
       });
 
       const studentsWithPhonesAndDebt: IStudentWithPhonesAndDebt[] = [];
@@ -200,6 +201,7 @@ class UserDAO {
     try {
       const students: IStudent[] = await this.prisma.user.findMany({
         where: { motherName: { contains: motherName } },
+        orderBy: { name: "asc" }
       });
 
       const studentsWithPhonesAndDebt: IStudentWithPhonesAndDebt[] = [];
@@ -475,12 +477,13 @@ class UserDAO {
 
   async findAllStudentsWithPhonesAndDebt(event: any) {
     try {
-        const students: IStudent[] = await this.prisma.user.findMany();
+        const students: IStudent[] = await this.prisma.user.findMany({orderBy: { name: "asc" }});
         const studentsWithPhonesAndDebt: IStudentWithPhonesAndDebt[] = [];
 
         for (const student of students) {
             const phones: IPhone[] = await this.prisma.phone.findMany({
                 where: { user_cpf: student.cpf },
+                
             });
 
             const unpaidLectures: ILecture[] = await this.prisma.lecture.findMany({

@@ -14,7 +14,7 @@ function joinGrades (year: string, type: string) {
     return `${year} Ano ${type}`;
 }
 
-function splitGrades (grade: string) {
+export function splitGrades (grade: string) {
     const [gradeYear, gradeType] = grade.split(" Ano ");
 
     return { gradeType, gradeYear };

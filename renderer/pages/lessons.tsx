@@ -1,61 +1,7 @@
 import { useEffect, useState } from "react";
 import { Layout } from "../components/Layout"
-import LessonModal from "../components/LessonModal";
-import { useLecturesStore, useLessonsStore, useStudentsStore } from "../store";
-import { CheckCircle, XCircle } from "lucide-react";
-import LectureModal from "../components/LectureModal/LectureModal";
-import { toast } from "react-hot-toast";
-import { fetchData, sendEvent } from "../../utils/api";
-import DateService from "../../utils/DateService";
 
-const handleAddLesson = async (data, setLessons, setLectures) => {
-    let { cpf, startAt, endAt, value } = data;
-
-    startAt = new Date(startAt).toISOString();
-    endAt = new Date(endAt).toISOString();
-    value = parseFloat(value);
-
-    const payed = false;
-    const presence = false;
-
-    try {
-        let lesson = null;
-        lesson = await sendEvent("create-lesson", { startAt, endAt, value }) ;
-        if (lesson) {
-            let id = lesson.id;
-            try {
-                await sendEvent("create-lecture", { user_cpf: cpf, lesson_id: id, payed, presence });
-                toast.success("Aula criada");
-                fetchData(null, null, setLessons, setLectures);
-            } catch (error) {
-                toast.error("Algo deu errado");
-            }
-        } 
-    } catch (error) {
-        toast.error("Algo deu errado");
-    }
-}
-
-const handleEditLecture = async (data, setLessons, setLectures) => {
-    let { newLesson, newLecture } = data;
-
-    newLesson.startAt = new Date(newLesson.startAt).toISOString();
-    newLesson.endAt = new Date(newLesson.endAt).toISOString();
-
-    try {
-        await sendEvent("update-lesson", newLesson.id, newLesson);
-        try {
-            await sendEvent("update-lecture", newLecture.id, newLecture);
-            toast.success("Dados alterados");
-            fetchData(null, null, setLessons, setLectures);
-        } catch (error) {
-            toast.error("Algo deu errado");
-        }
-    } catch (error) {
-        toast.error("Algo deu errado");
-    }
-}
-
+/*
 const LectureCard = ({ lecture }) => {
     const students = useStudentsStore((state: any) => state.students);
     const { student } = students.filter((data) => data.student.cpf === lecture.user_cpf)[0];
@@ -126,67 +72,36 @@ const LectureCard = ({ lecture }) => {
             <LectureModal isOpen={isOpen} closeModal={() => setOpen(false)} onSave={onEditLecture} data={data}/>
         </div>
     )
-}
+}*/
 
 export default function Lessons () {
     const [open, setOpen] = useState(false);
 
-    const lessons = useLessonsStore((state: any) => state.lessons);
-    const setLessons = useLessonsStore((state: any) => state.setLessons);
-
-    const lectures = useLecturesStore((state: any) => state.lectures);
-    const setLectures = useLecturesStore((state: any) => state.setLectures);
-
-    const setStudents = useStudentsStore((state: any) => state.setStudents);
-
     const [loading, setLoading] = useState(true);
-
-    const onAddLesson = (data) => {
-        handleAddLesson(data, setLessons, setLectures);
-    }
-
-    useEffect(() => {
-        fetchData(setStudents, null, setLessons, setLectures);
-        if (lessons && lectures) {
-            setLoading(false);
-        }
-    }, [])
 
     return (
         <Layout.Root>
             <Layout.Header>
-                <h1>Lessons</h1>
+                <h1>Aulas</h1>
             </Layout.Header>
             <Layout.Content>
-                <div className="flex h-full flex-col items-center justify-center">
-                    <div className="m-2">
-                        <div onClick={() => setOpen(!open)}>
-                            <div style={{ userSelect: "none" }}>
-                                <div className="py-3 px-5 w-full bg-darkBlue rounded-md shadow-sm shadow-black">
-                                    <h1 className="text-xl font-bold text-white">Agendar nova aula</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <LessonModal isOpen={open} closeModal={() => setOpen(false)} onSave={onAddLesson}/>
+            <div className="h-full flex flex-col gap-4">
+                    <h1 className="text-2xl font-bold text-slate-800 text-center">Aulas</h1>
+                    <div>
+                        <button>Nova aula</button>
                     </div>
-                    <div className="my-5 w-5/6 h-1 bg-darkBlue"></div>
-                    <div className="flex flex-col w-11/12 overflow-y-auto">
+                    <div className="h-5/6 w-full overflow-y-auto p-2">
                         {
-                            loading ?
-                                <p>Carregando...</p>
-                            :
-                                lectures.length === 0 ? 
-                                    <p>Nenhuma aula encontrada</p>
-                                :
-                                    lectures.map((lecture, index) => {
-                                        return (
-                                            <LectureCard key={index} lecture={lecture}/>
-                                        )
-                                    })
+                            
                         }
                     </div>
-				</div>
+                    <div className="flex justify-center my-3">
+                        
+                    </div>
+                </div>
             </Layout.Content>
         </Layout.Root>
     )
 }
+
+//<Pagination totalData={studentsData.length} perPage={perPage} setCurrentPage={setCurrentPage} currentPage={currentPage}/>

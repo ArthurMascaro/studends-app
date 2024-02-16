@@ -7,7 +7,6 @@ class UserDAO {
         this.prisma = new client_1.PrismaClient();
     }
     async create(event, data) {
-        console.log("avsvasvzvxz");
         try {
             const result = await this.prisma.user.create({ data });
             return event.reply("create-user-success", result);
@@ -138,6 +137,7 @@ class UserDAO {
         try {
             const students = await this.prisma.user.findMany({
                 where: { name: { contains: name } },
+                orderBy: { name: "asc" }
             });
             const studentsWithPhonesAndDebt = [];
             for (const student of students) {
@@ -184,6 +184,7 @@ class UserDAO {
         try {
             const students = await this.prisma.user.findMany({
                 where: { motherName: { contains: motherName } },
+                orderBy: { name: "asc" }
             });
             const studentsWithPhonesAndDebt = [];
             for (const student of students) {
@@ -425,7 +426,7 @@ class UserDAO {
     }
     async findAllStudentsWithPhonesAndDebt(event) {
         try {
-            const students = await this.prisma.user.findMany();
+            const students = await this.prisma.user.findMany({ orderBy: { name: "asc" } });
             const studentsWithPhonesAndDebt = [];
             for (const student of students) {
                 const phones = await this.prisma.phone.findMany({

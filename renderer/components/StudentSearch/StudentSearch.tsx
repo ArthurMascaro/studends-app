@@ -1,6 +1,7 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { searchOptions, searchStudents } from "./actions";
 import { toast } from "react-hot-toast";
+import { sendEvent } from "../../../utils/api";
 
 interface SearchStudentsProps {
     setSearchResults: Dispatch<SetStateAction<any[]>>
@@ -9,21 +10,33 @@ interface SearchStudentsProps {
 
 export default function StudentSearch ({ setSearchResults, selector }: SearchStudentsProps) {
 
-    const [selectorType, setSelectorType] = useState(searchOptions[0].value);
+    const [selectorType, setSelectorType] = useState("by-name");
     const [searchParam, setSearchParam] = useState("");
 
-    async function handleSearch () {
-        if (searchParam && selectorType) {
-            try {
-                let data: any[] = await searchStudents(selectorType, searchParam);
-                console.log(data)
-                setSearchResults(data);
-            } catch (error) {
-                toast.error("Algo deu errado");
+    useEffect(() => {
+        async function fetch () {
+            if (searchParam && selectorType) {
+                if (searchParam.trim().length !== 0) {
+                    try {
+                        let data: any[] = await searchStudents(selectorType, searchParam);
+                        setSearchResults(data);
+                    } catch (error) {
+                        toast.error("Algo deu errado");
+                    }
+                } 
+            } else {
+                try {
+                    let data: any = await sendEvent("find-all-students-with-phones-and-debt");
+                    setSearchResults(data);
+                } catch (error) {
+                    toast.error("Algo deu errado");
+                }
             }
         }
-    }
 
+        fetch();
+    }, [searchParam])
+    
     return (
         <div className="flex gap-10">
             <div className="flex">
@@ -33,9 +46,9 @@ export default function StudentSearch ({ setSearchResults, selector }: SearchStu
                             <div>
                                 <select onChange={(event) => setSelectorType(event.target.value)}>
                                     {
-                                        searchOptions.map((option, index) => {
+                                        Object.keys(searchOptions).map((key, index) => {
                                             return (
-                                                <option key={index} value={option.value}>{option.label}</option>
+                                                <option key={index} value={key}>{searchOptions[key]}</option>
                                             )
                                         })
                                     }
@@ -46,11 +59,8 @@ export default function StudentSearch ({ setSearchResults, selector }: SearchStu
                     }
                 </div>
                 <div>
-                    <input type="text" value={searchParam} onChange={(event) => setSearchParam(event.target.value)}/>
+                    <input type="text" placeholder={`Buscar alunos pelo ${searchOptions[selectorType]}`} onChange={(event) => setSearchParam(event.target.value)}/>
                 </div>
-            </div>
-            <div>
-                <button onClick={handleSearch}>Buscar</button>
             </div>
         </div>
 

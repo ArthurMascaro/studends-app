@@ -43,7 +43,7 @@ export default function StudentModal ({ isOpen, setOpen, student, phones }: Stud
 
     function handleClose () {
         reset();
-        setOpen(false);
+        setOpen(!isOpen);
     }
 
     useEffect(() => {
